@@ -77,11 +77,14 @@ target/
 # Jupyter Notebook
 .ipynb_checkpoints
 
+<<<<<<< HEAD
 # pyenv
 .python-version
 
 # celery beat schedule file
 celerybeat-schedule
+=======
+>>>>>>> d92ac83b30deebaf3346791ab0fcaa1fff836fb0
 # IPython
 profile_default/
 ipython_config.py
