@@ -134,8 +134,9 @@ dmypy.json
 .pyre/
 data/
 datasets/
-.pdf
-.npy
-.npz
-.npy.gz
-.idea
+*.pdf
+*.npy
+*.npz
+*.npy.gz
+*.idea
+results/
