@@ -102,3 +102,12 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+data/
+datasets/
+*.pdf
+*.npy
+*.npz
+*.npy.gz
+*.idea
+results/
+.DS_Store
