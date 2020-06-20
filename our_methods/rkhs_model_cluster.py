@@ -7,56 +7,15 @@ import matplotlib.pyplot as plt
 from autograd import value_and_grad
 from scipy.optimize import minimize
 from sklearn.model_selection import KFold
-from nn_model import get_median_inter
+from util import get_median_inter, Kernel, load_data
 from joblib import Parallel,delayed
 from early_stopping import EarlyStopping
-
 Nfeval = 1
 seed = 527
 torch.manual_seed(seed)
 np.random.seed(seed)
 JITTER = 1e-6
 M = 512
-def Kernel(name):
-    def poly(x,c,d):
-        return (np.matmul(x,x.T)+c*c)**d
-
-    def rbf(x,y,a,b):
-        x,y = x/a, y/a
-        x2,y2 = np.sum(x*x,axis=1,keepdims=True),np.sum(y*y,axis=1,keepdims=True)
-        sqdist = x2+y2.T-2*np.matmul(x,y.T)
-        out = b*b*np.exp(-sqdist)
-        return out
-
-    def laplace(x,a):
-        return 0
-
-    def quad(x,y,a,b):
-        x, y = x/a, y/a
-        x2, y2 = np.sum(x * x, axis=1, keepdims=True), np.sum(y * y, axis=1, keepdims=True)
-        sqdist = x2 + y2.T - 2 * np.matmul(x,y.T)
-        out = (sqdist+1)**(-b)
-        return out
-
-    assert isinstance(name,str), 'name should be a string'
-    kernel_dict = {'rbf':rbf,'poly':poly,'quad':quad}
-    return kernel_dict[name]
-
-def load_data(scenario_name):
-    # load data
-    # print("\nLoading " + scenario_name + "...")
-    if 'mnist' in scenario_name:
-        scenario_path = "../data/" + scenario_name + "/main.npz"
-    else:
-        scenario_path = "../data/zoo/" + scenario_name + ".npz"
-    scenario = AbstractScenario(filename=scenario_path)
-    scenario.to_2d()
-        # scenario.info()
-
-    train = scenario.get_dataset("train")
-    dev = scenario.get_dataset("dev")
-    test = scenario.get_dataset("test")
-    return train, dev, test
 
 def nystrom(G,ind):
     Gnm = G[:,ind]
@@ -336,7 +295,7 @@ def plot_cv(scenario_name,seed=527):
     np.save('err_{}_cvu_{}.npy'.format(scenario_name,ak),err_list)
     np.save('loss_{}_cvu_{}.npy'.format(scenario_name,ak),loss_list)
 
-def plot_bayes(scenario_name,i,j, seed=527, nystr=True):
+def plot_bayes(scenario_name, seed=527, nystr=True):
     # load data
     scenario_path = "../data/zoo/" + scenario_name + ".npz"
     scenario = AbstractScenario(filename=scenario_path)
