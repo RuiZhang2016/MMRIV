@@ -7,65 +7,22 @@ import matplotlib.pyplot as plt
 from autograd import value_and_grad
 from scipy.optimize import minimize
 from sklearn.model_selection import KFold
-from nn_model import get_median_inter
+from util import get_median_inter, Kernel, load_data
 from joblib import Parallel,delayed
 from early_stopping import EarlyStopping
-
 Nfeval = 1
 seed = 527
 torch.manual_seed(seed)
 np.random.seed(seed)
 JITTER = 1e-6
 M = 512
-def Kernel(name):
-    def poly(x,c,d):
-        return (np.matmul(x,x.T)+c*c)**d
-
-    def rbf(x,y,a,b):
-        x,y = x/a, y/a
-        x2,y2 = np.sum(x*x,axis=1,keepdims=True),np.sum(y*y,axis=1,keepdims=True)
-        sqdist = x2+y2.T-2*np.matmul(x,y.T)
-        out = b*b*np.exp(-sqdist)
-        return out
-
-    def laplace(x,a):
-        return 0
-
-    def quad(x,y,a,b):
-        x, y = x/a, y/a
-        x2, y2 = np.sum(x * x, axis=1, keepdims=True), np.sum(y * y, axis=1, keepdims=True)
-        sqdist = x2 + y2.T - 2 * np.matmul(x,y.T)
-        out = (sqdist+1)**(-b)
-        return out
-
-    assert isinstance(name,str), 'name should be a string'
-    kernel_dict = {'rbf':rbf,'poly':poly,'quad':quad}
-    return kernel_dict[name]
-
-def load_data(scenario_name):
-    # load data
-    # print("\nLoading " + scenario_name + "...")
-    if 'mnist' in scenario_name:
-        scenario_path = "../data/" + scenario_name + "/main.npz"
-        folder = "/home/ruizhang/DeepGMM/our_methods/results/" + scenario_name + "/"
-    else:
-        scenario_path = "../data/zoo/" + scenario_name + ".npz"
-        folder = "/home/ruizhang/DeepGMM/our_methods/results/zoo/" + scenario_name + "/"
-        scenario = AbstractScenario(filename=scenario_path)
-        scenario.to_2d()
-        # scenario.info()
-
-        train = scenario.get_dataset("train")
-        dev = scenario.get_dataset("dev")
-        test = scenario.get_dataset("test")
-    return train, dev, test
 
 def nystrom(G,ind):
     Gnm = G[:,ind]
     sub_G = (Gnm)[ind,:]
 
-    eig_val, eig_vec = numpy.linalg.eigh(sub_G)
-    eig_vec = np.sqrt(len(ind) / G.shape[0]) * np.matmul(Gnm, eig_vec)*eig_val
+    eig_val, eig_vec = numpy.linalg.eigh(sub_G+JITTER*np.eye(sub_G.shape[0]))
+    eig_vec = np.sqrt(len(ind) / G.shape[0]) * np.matmul(Gnm, eig_vec)/eig_val
     eig_val /= len(ind) / G.shape[0]
     return eig_val, eig_vec
 
@@ -76,14 +33,19 @@ def train_cv_loss(params, l,k, train,test, nystr=False):
     X_train, Y_train, Z_train = train
     
     L_train = l(X_train,X_train,al,1)
-    W_train = k(Z_train,Z_train,ak,1)
+    W_train = k(Z_train,Z_train,ak,1)/Z_train.shape[0]**2
     WY_train = np.matmul(W_train,Y_train)
     EYE = np.eye(W_train.shape[0])
     if nystr:
         LWL = np.matmul(L_train,np.matmul(W_train,L_train))
-        eig_val, eig_vec = nystrom(LWL+Lambda*L_train,np.random.choice(range(X_train.shape[0]),M,replace=False))
-        alpha = EYE - eig_vec@np.linalg.inv(JITTER*np.eye(M) +eig_vec.T@eig_vec*eig_val)@eig_vec.T
+        eig_val, eig_vec = nystrom(LWL+Lambda*L_train,np.sort(np.random.choice(range(X_train.shape[0]),M,replace=False)))
+        #tmp_val, tmp_vec = np.linalg.eigh(LWL+Lambda*L_train)
+        alpha = EYE - eig_vec@np.linalg.inv(JITTER*np.eye(M)+np.diag(eig_val)@eig_vec.T@eig_vec)@np.diag(eig_val)@eig_vec.T
+        # tmp_alpha = EYE - tmp_vec@np.linalg.inv(JITTER*np.eye(M) +tmp_vec.T@tmp_vec*tmp_val)@np.diag(tmp_val)@tmp_vec.T
         alpha = alpha@L_train@WY_train/JITTER
+        # tmp_alpha = tmp_alpha@L_train@WY_train/JITTER
+        # print(alpha)
+        # print(tmp_alpha)
     else:
         alpha = np.linalg.inv(np.matmul(W_train,L_train) + Lambda * np.eye(W_train.shape[0]))
         alpha = np.matmul(alpha,WY_train)
@@ -94,8 +56,8 @@ def train_cv_loss(params, l,k, train,test, nystr=False):
         return train_err[0,0]
 
     X_test, Y_test, Z_test = test
-    W_test = k(Z_test,Z_test,ak,1)
-    W_test -= np.diag(np.diag(W_test))
+    W_test = k(Z_test,Z_test,ak,1)/Z_test.shape[0]**2
+    # W_test -= np.diag(np.diag(W_test))
     L_test = l(X_test,X_train,al,1)
     Y_pred = np.matmul(L_test,alpha)
     diff_test = Y_test - Y_pred
@@ -184,10 +146,10 @@ def run_experiment_rkhs_2(scenario_name,rep, nystr=True):
     train_tensor = [train.x,train.y,train.z]
     dev_tensor = [dev.x,dev.y,dev.z]
     ak = get_median_inter(Z)
-    #al = get_median_inter(X)
+    al0 = get_median_inter(X)
     kf = KFold(n_splits=2)
     kf.get_n_splits(X)
-    als = np.linspace(0.08,3,16)
+    als = np.linspace(al0/10,al0*3,8)
 
     def loop(Li,al):
         cv_err = 0
@@ -201,18 +163,18 @@ def run_experiment_rkhs_2(scenario_name,rep, nystr=True):
             # result = np.array([train_cv_loss([Li,al,ak],l,k,train_tensor,None) for al in als])
             # al1 = result.x
             # al1 = als[np.argmin(result)]
-            cv_err += np.sum(train_cv_loss([Li,al,ak],l,k,train_tensor,dev_tensor,True))
+            cv_err += train_cv_loss([Li,al,ak],l,k,train_tensor,dev_tensor,True)[0]
         # loss_grad = value_and_grad(lambda al: train_cv_loss([Li,al,ak],l,k,dev_tensor,None))
         # result = minimize(loss_grad, x0=np.array([al0]), method='L-BFGS-B', jac=True,bounds=[[0.01,5]], options={'maxiter':500})
         # al2 = result.x
         # cv_err += train_cv_loss([Li,al2,ak],l,k,dev_tensor,train_tensor)
         return cv_err
 
-    Lambdas = np.array([1e-11,1e-10,1e-9,1e-8,1e-7,1e-6,1e-5])*1e7
+    Lambdas = np.logspace(-10,-6,8)
     save_path = os.path.join(folder, 'our_method_rkhs_%d.npz' % rep)
 
     # cross validation
-    cv_errs = Parallel(n_jobs=10)(delayed(loop)(Li,al) for Li in Lambdas for al in als)
+    cv_errs = Parallel(n_jobs=20)(delayed(loop)(Li,al) for Li in Lambdas for al in als)
     optimid = np.argmin(cv_errs)
     i,j = divmod(optimid,len(als))
     Lambda = Lambdas[i]
@@ -225,16 +187,21 @@ def run_experiment_rkhs_2(scenario_name,rep, nystr=True):
     # test
     # res = [train_cv_loss([Lambda,al,ak],l,k,[X,Y,Z],None) for al in als]
     # al = als[np.argmin(res)]
-    print(al)
+    # print('al, Lambda ',al, Lambda)
+   #  for al in als:
     test_L = l(test.x, X, al, 1)
     L = l(X,X,al,1)# l(X, X, al, 1)
-    W = k(Z, Z, ak, 1)
+    # print(Y.shape)
+    # a,b=np.linalg.eigh(Y@ Y.T -L)
+    # print(a)
+    # return
+    W = k(Z, Z, ak, 1)/Z.shape[0]**2
     WY = np.matmul(W, Y)
     EYE = np.eye(W.shape[0])
     if nystr:
         LWL = np.matmul(L,np.matmul(W,L))
-        eig_val, eig_vec = nystrom(LWL+Lambda*L,np.random.choice(range(X.shape[0]),M,replace=False))
-        alpha = EYE - eig_vec@np.linalg.inv(JITTER*np.eye(M) +eig_vec.T@eig_vec*eig_val)@eig_vec.T
+        eig_val, eig_vec = nystrom(LWL+Lambda*L,np.sort(np.random.choice(range(X.shape[0]),M,replace=False)))
+        alpha = EYE - eig_vec@np.linalg.inv(JITTER*np.eye(M) +np.diag(eig_val)@eig_vec.T@eig_vec)@np.diag(eig_val)@eig_vec.T
         alpha = alpha@L@WY/JITTER
     else:
         alpha = np.linalg.inv(np.matmul(W, L) + Lambda * np.eye(W.shape[0]))
@@ -243,7 +210,8 @@ def run_experiment_rkhs_2(scenario_name,rep, nystr=True):
     g_pred = test_L @ alpha
     err = ((g_pred - test.g) ** 2).mean()
     np.savez('tmp_{}_{}_nystr{}.npz'.format(scenario_name,rep,nystr),cv_errs=cv_errs, Lambda=Lambda, al = al,g_pred = g_pred)
-    print(scenario_name, ' ', rep, ' test_err ', err, Lambda)
+    print(scenario_name, ' ', rep, ' test_err ', err)
+    ak = get_median_inter(Z)
     #np.savez(save_path, x=test.w, y=test.y, g_true=test.g, g_hat=g_pred)
     #print(str(rep) + " done, test loss " + str(err) + ' ' + str(Lambda) + ' ' + str(al))
 
@@ -327,7 +295,7 @@ def plot_cv(scenario_name,seed=527):
     np.save('err_{}_cvu_{}.npy'.format(scenario_name,ak),err_list)
     np.save('loss_{}_cvu_{}.npy'.format(scenario_name,ak),loss_list)
 
-def plot_bayes(scenario_name, seed=527):
+def plot_bayes(scenario_name, seed=527, nystr=True):
     # load data
     scenario_path = "../data/zoo/" + scenario_name + ".npz"
     scenario = AbstractScenario(filename=scenario_path)
@@ -347,40 +315,37 @@ def plot_bayes(scenario_name, seed=527):
     X, Y, Z = [np.vstack(e) for e in [(train.x, dev.x), (train.y, dev.y), (train.z, dev.z)]]
     # X, Y, Z = train.x, train.y, train.z
     ak = get_median_inter(Z)
-    W = k(Z, Z, ak, 1)
+    W = k(Z, Z, ak, 1)/Z.shape[0]**2
     WY = np.matmul(W, Y)
     eyes = np.eye(X.shape[0])
 
-    def log_marginal(params):
-        ak, al, Lambda = params
-        Lambda = np.exp(Lambda)
-        L = l(X,X,al,1)/Lambda
-        inv_A = np.linalg.inv(eyes +np.matmul( W,L))
-        inv_A = np.matmul(inv_A,W)
-        (sign,logdet) = np.linalg.slogdet(inv_A)
-        return (-logdet+np.matmul(np.matmul(Y.T, inv_A),Y))[0,0]
-    
-    Lambda_list = numpy.linspace(5, 10, 10)
+    def log_marginal(L,alpha):
+        (sign_W,logdet_W) = np.linalg.slogdet(W)
+        (sign_WL,logdet_WL) = np.linalg.slogdet(eyes +np.matmul( W,L))
+        return (-logdet_W+logdet_WL+np.matmul(Y.T, alpha))[0,0]
+
+    Lambda_list = numpy.logspace(-10, -6, 10)
     al_list = numpy.logspace(-2,1,10)
-    def loop(i):
+    def loop(i,j):
         al = al_list[i]
-        L = l(X, X, al, 1)
-        WL = np.matmul(W, L)
-        test_L = l(test.x, X, al, 1)
-        length =len(Lambda_list)
-        err_list = numpy.zeros(length)
-        loss_list = numpy.zeros(length)
-        for j in range(length):
-            Lambda = Lambda_list[j]
-            alpha = np.matmul(np.linalg.inv(WL+ np.exp(Lambda) * eyes), WY)
-            g_pred = np.matmul(test_L, alpha)
-            err = ((g_pred - test.g) ** 2).mean()
-            err_list[j]=err
-            loss_list[j] = log_marginal([ak,al,Lambda])
-        return err_list, loss_list
-    result = Parallel(n_jobs=len(al_list))(delayed(loop)(i) for i in range(len(al_list)))
-    err_list = np.array([e[0] for e in result])
-    loss_list = np.array([e[1] for e in result])
+        Lambda = Lambda_list[j]
+        L = Lambda*l(X, X, al, 1)
+        if nystr:
+            LWL = np.matmul(L,np.matmul(W,L))
+            eig_val, eig_vec = nystrom(LWL+L,np.sort(np.random.choice(range(X.shape[0]),M,replace=False)))
+            alpha = EYE - eig_vec@np.linalg.inv(JITTER*np.eye(M) +np.diag(eig_val)@eig_vec.T@eig_vec)@np.diag(eig_val)@eig_vec.T
+            alpha = alpha@L@WY/JITTER
+        else:
+            alpha = np.linalg.inv(np.matmul(W, L) + np.eye(W.shape[0]))
+            alpha = np.matmul(alpha,WY)
+        test_L = Lambda*l(test.x, X, al, 1)
+        g_pred = np.matmul(test_L, alpha)
+        err_ij = ((g_pred - test.g) ** 2).mean()
+        loss_ij = log_marginal(L,alpha)
+        return err_ij, loss_ij
+    result = Parallel(n_jobs=20)(delayed(loop)(i,j) for i in range(len(al_list)) for j in range(len(Lambda_list)))
+    err_list = np.array([e[0] for e in result]).reshape((len(al_list),len(Lambda_list)))
+    loss_list = np.array([e[1] for e in result]).reshape((len(al_list),len(Lambda_list)))
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 8), sharey=True)
     CS = ax1.contourf(numpy.tile(Lambda_list, [len(al_list), 1]), numpy.tile(al_list, [len(Lambda_list), 1]).T,
@@ -389,14 +354,18 @@ def plot_bayes(scenario_name, seed=527):
     ax1.set_xlim(Lambda_list[0], Lambda_list[-1])
     ax1.set_ylim(al_list[0], al_list[-1])
     ax1.set_yscale('log')
+    ax1.set_xscale('log')
+    plt.title('test error')
 
     CS = ax2.contourf(numpy.tile(Lambda_list, [len(al_list), 1]), numpy.tile(al_list, [len(Lambda_list), 1]).T,
                       loss_list)
     fig.colorbar(CS, ax=ax2)
     ax2.set_xlim(Lambda_list[0], Lambda_list[-1])
+    ax2.set_xscale('log')
+    plt.title('negative log marginal likelihood')
+
     plt.savefig('{}_bayes_{}.pdf'.format(scenario_name,ak), bbox_inches='tight')
     plt.close('all')
-    # plt.show()
     np.save('err_{}_bayes_{}.npy'.format(scenario_name,ak),err_list)
     np.save('loss_{}_bayes_{}.npy'.format(scenario_name,ak),loss_list)
 
@@ -407,9 +376,16 @@ if __name__ == '__main__':
     #scenario_id = int(sys.argv[1])
     #scenario = scenario_list[scenario_id]
     # Parallel(n_jobs=20)(delayed(run_experiment_rkhs_2)(s,rep) for s in scenario_list for rep in range(1))
-    run_experiment_rkhs_2("step",0)
+    for s in scenario_list:
+        plot_bayes(s)
+        # train, dev, test = load_data(s)
+        # res = np.load('tmp_{}_{}_nystr{}.npz'.format(s,0,'True'))
+        # print(res['Lambda'],res['al'])
+        # print(((res['g_pred']-test.g)**2).mean())
+        # for i in range(3):
+        # run_experiment_rkhs_2('linear',0,nystr = True)
+        # break
     # [plot_cv(s) for s in scenario_list]
     # run_experiment_rkhs(scenario)
-    # for scenario in scenario_list:
-        # plot_bayes(scenario)
-    #    plot_cv(scenario)
+    # a = np.load('tmp_step_0_nystrTrue.npz')
+    # print(a['g_pred'])
