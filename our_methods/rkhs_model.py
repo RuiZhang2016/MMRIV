@@ -1,5 +1,6 @@
 import add_path,os,sys
-import torch,numpy
+import numpy
+import torch
 import torch.optim as optim
 import autograd.numpy as np
 from scenarios.abstract_scenario import AbstractScenario
@@ -7,7 +8,7 @@ import matplotlib.pyplot as plt
 from autograd import value_and_grad
 from scipy.optimize import minimize
 from sklearn.model_selection import KFold
-from util import get_median_inter, Kernel, load_data
+from util import get_median_inter, Kernel, load_data, ROOT_PATH
 from joblib import Parallel,delayed
 from early_stopping import EarlyStopping
 Nfeval = 1
@@ -16,12 +17,13 @@ torch.manual_seed(seed)
 np.random.seed(seed)
 JITTER = 1e-6
 M = 512
+EYEM = np.eye(M)
 
 def nystrom(G,ind):
     Gnm = G[:,ind]
     sub_G = (Gnm)[ind,:]
 
-    eig_val, eig_vec = numpy.linalg.eigh(sub_G+JITTER*np.eye(sub_G.shape[0]))
+    eig_val, eig_vec = numpy.linalg.eigh(sub_G+JITTER*EYEM)
     eig_vec = np.sqrt(len(ind) / G.shape[0]) * np.matmul(Gnm, eig_vec)/eig_val
     eig_val /= len(ind) / G.shape[0]
     return eig_val, eig_vec
@@ -35,19 +37,19 @@ def train_cv_loss(params, l,k, train,test, nystr=False):
     L_train = l(X_train,X_train,al,1)
     W_train = k(Z_train,Z_train,ak,1)/Z_train.shape[0]**2
     WY_train = np.matmul(W_train,Y_train)
-    EYE = np.eye(W_train.shape[0])
+    EYEN = np.eye(W_train.shape[0])
     if nystr:
         LWL = np.matmul(L_train,np.matmul(W_train,L_train))
         eig_val, eig_vec = nystrom(LWL+Lambda*L_train,np.sort(np.random.choice(range(X_train.shape[0]),M,replace=False)))
         #tmp_val, tmp_vec = np.linalg.eigh(LWL+Lambda*L_train)
-        alpha = EYE - eig_vec@np.linalg.inv(JITTER*np.eye(M)+np.diag(eig_val)@eig_vec.T@eig_vec)@np.diag(eig_val)@eig_vec.T
+        alpha = EYE - eig_vec@np.linalg.inv(JITTER*EYEM+np.diag(eig_val)@eig_vec.T@eig_vec)@np.diag(eig_val)@eig_vec.T
         # tmp_alpha = EYE - tmp_vec@np.linalg.inv(JITTER*np.eye(M) +tmp_vec.T@tmp_vec*tmp_val)@np.diag(tmp_val)@tmp_vec.T
         alpha = alpha@L_train@WY_train/JITTER
         # tmp_alpha = tmp_alpha@L_train@WY_train/JITTER
         # print(alpha)
         # print(tmp_alpha)
     else:
-        alpha = np.linalg.inv(np.matmul(W_train,L_train) + Lambda * np.eye(W_train.shape[0]))
+        alpha = np.linalg.inv(np.matmul(W_train,L_train) + Lambda * EYEN)
         alpha = np.matmul(alpha,WY_train)
     
     diff_train = Y_train - L_train @ alpha
@@ -136,9 +138,14 @@ def run_experiment_rkhs(scenario_name, seed=527):
 def run_experiment_rkhs_2(scenario_name,rep, nystr=True):
     # load data
     train, dev, test = load_data(scenario_name)
+    print("\nLoading " + scenario_name + "...")
+    if 'mnist' in scenario_name:
+        folder = ROOT_PATH + "/our_methods/results/" + scenario_name + "/"
+    else:
+        folder = ROOT_PATH + "/our_methods/results/zoo/" + scenario_name + "/"
 
     # training settings
-    folder = "results/zoo/" + scenario_name + "/"
+    folder = ROOT_PATH + "/our_methods/results/zoo/" + scenario_name + "/"
 
     # pre-compute constants
     k, l = Kernel('rbf'), Kernel('rbf')
@@ -197,14 +204,14 @@ def run_experiment_rkhs_2(scenario_name,rep, nystr=True):
     # return
     W = k(Z, Z, ak, 1)/Z.shape[0]**2
     WY = np.matmul(W, Y)
-    EYE = np.eye(W.shape[0])
+    EYEN = np.eye(W.shape[0])
     if nystr:
         LWL = np.matmul(L,np.matmul(W,L))
         eig_val, eig_vec = nystrom(LWL+Lambda*L,np.sort(np.random.choice(range(X.shape[0]),M,replace=False)))
-        alpha = EYE - eig_vec@np.linalg.inv(JITTER*np.eye(M) +np.diag(eig_val)@eig_vec.T@eig_vec)@np.diag(eig_val)@eig_vec.T
+        alpha = EYE - eig_vec@np.linalg.inv(JITTER*EYEM +np.diag(eig_val)@eig_vec.T@eig_vec)@np.diag(eig_val)@eig_vec.T
         alpha = alpha@L@WY/JITTER
     else:
-        alpha = np.linalg.inv(np.matmul(W, L) + Lambda * np.eye(W.shape[0]))
+        alpha = np.linalg.inv(np.matmul(W, L) + Lambda * EYEN)
         alpha = np.matmul(alpha,WY)
 
     g_pred = test_L @ alpha
@@ -256,7 +263,7 @@ def plot_cv(scenario_name,seed=527):
     Lambda_list = numpy.linspace(-10,-5,32)
     al_list = np.linspace(al0[0,0]/3,al0[0,0]*3,10)
     WY = np.matmul(W, Y)
-    eyes = np.eye(W.shape[0])
+    EYE = np.eye(W.shape[0])
 
     def loop(i):
         al = al_list[i]
@@ -268,7 +275,7 @@ def plot_cv(scenario_name,seed=527):
         loss_list = numpy.zeros(length)
         for j in range(length):
             Lambda = Lambda_list[j]
-            alpha = np.matmul(np.linalg.inv(WL+ np.exp(Lambda) *eyes),WY)
+            alpha = np.matmul(np.linalg.inv(WL+ np.exp(Lambda) *EYE),WY)
 
             # predictions
             g_pred = np.matmul(test_L, alpha)
@@ -297,18 +304,7 @@ def plot_cv(scenario_name,seed=527):
 
 def plot_bayes(scenario_name, seed=527, nystr=True):
     # load data
-    scenario_path = "../data/zoo/" + scenario_name + ".npz"
-    scenario = AbstractScenario(filename=scenario_path)
-    scenario.to_2d()
-    scenario.info()
-
-    train = scenario.get_dataset("train")
-    dev = scenario.get_dataset("dev")
-    test = scenario.get_dataset("test")
-
-    # training settings
-    nreps = 1
-    folder = "results/zoo/" + scenario_name + "/"
+    train, dev, test = load_data(scenario_name)
 
     # pre-compute constants
     k, l = Kernel('rbf'), Kernel('rbf')
@@ -317,11 +313,11 @@ def plot_bayes(scenario_name, seed=527, nystr=True):
     ak = get_median_inter(Z)
     W = k(Z, Z, ak, 1)/Z.shape[0]**2
     WY = np.matmul(W, Y)
-    eyes = np.eye(X.shape[0])
+    EYEN = np.eye(X.shape[0])
 
     def log_marginal(L,alpha):
         (sign_W,logdet_W) = np.linalg.slogdet(W)
-        (sign_WL,logdet_WL) = np.linalg.slogdet(eyes +np.matmul( W,L))
+        (sign_WL,logdet_WL) = np.linalg.slogdet(EYEN +np.matmul( W,L))
         return (-logdet_W+logdet_WL+np.matmul(Y.T, alpha))[0,0]
 
     Lambda_list = numpy.logspace(-10, -6, 10)
@@ -333,10 +329,10 @@ def plot_bayes(scenario_name, seed=527, nystr=True):
         if nystr:
             LWL = np.matmul(L,np.matmul(W,L))
             eig_val, eig_vec = nystrom(LWL+L,np.sort(np.random.choice(range(X.shape[0]),M,replace=False)))
-            alpha = EYE - eig_vec@np.linalg.inv(JITTER*np.eye(M) +np.diag(eig_val)@eig_vec.T@eig_vec)@np.diag(eig_val)@eig_vec.T
+            alpha = EYEN - eig_vec@np.linalg.inv(JITTER*EYEM +np.diag(eig_val)@eig_vec.T@eig_vec)@np.diag(eig_val)@eig_vec.T
             alpha = alpha@L@WY/JITTER
         else:
-            alpha = np.linalg.inv(np.matmul(W, L) + np.eye(W.shape[0]))
+            alpha = np.linalg.inv(np.matmul(W, L) + EYEN)
             alpha = np.matmul(alpha,WY)
         test_L = Lambda*l(test.x, X, al, 1)
         g_pred = np.matmul(test_L, alpha)
