@@ -11,35 +11,8 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import PolynomialFeatures
 import scipy
 from joblib import Parallel, delayed
+from util import get_median_inter, get_median_inter_mnist, Kernel
 
-def Kernel(name):
-    def poly(x,c,d):
-        return (x @ x.T+c*c)**d
-
-    def rbf(x,y,a,b):
-        if y is None:
-            y = x
-        x,y = x/a, y/a
-        x2,y2 = torch.sum(x*x,dim=1,keepdim=True),torch.sum(y*y,dim=1,keepdim=True)
-        sqdist = x2+y2.T-2*x@y.T
-        if y is None:
-            sqdist = (sqdist+torch.abs(sqdist).T)/2
-        out = b*b*torch.exp(-sqdist)
-        return out
-
-    def laplace(x,a):
-        return 0
-
-    def quad(x,y,a,b):
-        x, y = x /a, y /a
-        x2, y2 = torch.sum(x * x, dim=1, keepdim=True), torch.sum(y * y, dim=1, keepdim=True)
-        sqdist = x2 + y2.T - 2 * x @ y.T
-        out = (sqdist+1)**(-b)
-        return out
-
-    assert isinstance(name,str), 'name should be a string'
-    kernel_dict = {'rbf':rbf,'poly':poly,'quad':quad}
-    return kernel_dict[name]
 
 class Net(nn.Module):
 
@@ -78,33 +51,6 @@ class CNN(nn.Module):
         x = self.fc3(x)
         return x
 
-def get_median_inter(x):
-    n,m = x.shape
-    def loop(a):
-        A = a[:,None]# np.tile(x[:,[i]],[1,n])
-        B = A.T
-        dist = abs(A - B)
-        dist = dist.flatten()
-        med = np.median(dist)
-        print(med)
-        return med
-    mat = np.array([loop(x[:,i]) for i in range(m)])
-    return mat.reshape((1,-1))
-    # b = x.T
-    # b = b[:,:,np.newaxis]
-    # c = b.reshape((b.shape[0],1,-1))
-    # d = c-b
-    # d = d.reshape((d.shape[0],-1))
-    # d = np.abs(d)
-    # return (np.median(d,axis=1))[:,None]
-
-def get_median_inter_mnist(x):
-    x2 = np.sum(x*x,axis=1,keepdims=True)
-    sqdist = x2+x2.T-2*x@x.T
-    dist = np.sqrt((sqdist+abs(sqdist).T)/2)
-    return np.median(dist.flatten())
-
-
 
 def run_experiment_nn(scenario_name,indices=[],seed=527,training=True):
     torch.manual_seed(seed)
@@ -114,20 +60,11 @@ def run_experiment_nn(scenario_name,indices=[],seed=527,training=True):
     # load data
     print("\nLoading " + scenario_name + "...")
     if 'mnist' in scenario_name:
-        scenario_path = "../data/" + scenario_name + "/main.npz"
         folder = "/home/ruizhang/DeepGMM/our_methods/results/" + scenario_name + "/"
     else:
-        scenario_path = "../data/zoo/" + scenario_name + ".npz"
         folder = "/home/ruizhang/DeepGMM/our_methods/results/zoo/" + scenario_name + "/"
 
-    scenario = AbstractScenario(filename=scenario_path)
-    scenario.to_2d()
-    scenario.info()
-
-    train = scenario.get_dataset("train")
-    dev = scenario.get_dataset("dev")
-    test = scenario.get_dataset("test")
-
+    train, dev, test = load_data(scenario_name)
     x,z,y = torch.from_numpy(train.x).float(),torch.from_numpy(train.z).float(),torch.from_numpy(train.y).float()
     dev_x, dev_z, dev_y, test_x = [torch.from_numpy(e).float() for e in [dev.x, dev.z,dev.y, test.x]]
 
@@ -136,7 +73,7 @@ def run_experiment_nn(scenario_name,indices=[],seed=527,training=True):
     batch_size = 1024
 
     # kernel
-    kernel = Kernel('rbf')
+    kernel = Kernel('rbf',torch=True)
     if dev_z.shape[1] < 5:
         a = get_median_inter(np.vstack((train.z,dev.z)))
     else:
