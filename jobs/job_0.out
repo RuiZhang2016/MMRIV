@@ -1,0 +1,47 @@
+params,test_err, norm:  [1.12975616 0.87232613] 0.01919730513786042 10.747751530007307
+params,test_err, norm:  [1.34448988 0.46969235] 0.015669513910118255 10.747751530007307
+params,test_err, norm:  [1.39203346 0.30499789] 0.016070795845572947 10.747751530007307
+params,test_err, norm:  [1.39203346 0.30499789] 0.016070795845572947 10.747751530007307
+RUNNING THE L-BFGS-B CODE
+
+           * * *
+
+Machine precision = 2.220D-16
+ N =            2     M =           10
+
+At X0         0 variables are exactly at the bounds
+
+At iterate    0    f=  3.47104D-01    |proj g|=  2.97562D-02
+
+At iterate    1    f=  3.44220D-01    |proj g|=  2.61989D-02
+
+At iterate    2    f=  3.34989D-01    |proj g|=  1.43261D-02
+
+At iterate    3    f=  3.29989D-01    |proj g|=  2.94180D-03
+
+At iterate    4    f=  3.33434D-01    |proj g|=  3.14559D-03
+
+           * * *
+
+Tit   = total number of iterations
+Tnf   = total number of function evaluations
+Tnint = total number of segments explored during Cauchy searches
+Skip  = number of BFGS updates skipped
+Nact  = number of active bounds at final generalized Cauchy point
+Projg = norm of the final projected gradient
+F     = final function value
+
+           * * *
+
+   N    Tit     Tnf  Tnint  Skip  Nact     Projg        F
+    2      4     10      4     0     0   3.146D-03   3.334D-01
+  F =  0.33343441556188075     
+
+CONVERGENCE: REL_REDUCTION_OF_F_<=_FACTR*EPSMCH             
+
+ Cauchy                time 0.000E+00 seconds.
+ Subspace minimization time 0.000E+00 seconds.
+ Line search           time 0.000E+00 seconds.
+
+ Total User time 0.000E+00 seconds.
+

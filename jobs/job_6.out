@@ -1,0 +1,57 @@
+params,test_err, norm:  [1.13482666 0.86926386] 0.021687932004722334 12.34960237718649
+params,test_err, norm:  [1.34575994 0.65094002] 0.017403713119974774 11.249443808188866
+params,test_err, norm:  [1.56657023 0.23745051] 0.01870823995653069 11.249443808188866
+params,test_err, norm:  [1.49101857 0.44647519] 0.015965903353287143 11.249443808188866
+params,test_err, norm:  [1.49091992 0.44613853] 0.01596585950329755 11.249443808188866
+params,test_err, norm:  [1.49101938 0.44514746] 0.01596750376835977 11.249443808188866
+params,test_err, norm:  [1.49101938 0.44514746] 0.01596750376835977 11.249443808188866
+RUNNING THE L-BFGS-B CODE
+
+           * * *
+
+Machine precision = 2.220D-16
+ N =            2     M =           10
+
+At X0         0 variables are exactly at the bounds
+
+At iterate    0    f=  3.48509D-01    |proj g|=  3.48267D-02
+
+At iterate    1    f=  3.43747D-01    |proj g|=  2.98831D-02
+
+At iterate    2    f=  3.33302D-01    |proj g|=  1.78706D-02
+
+At iterate    3    f=  3.32164D-01    |proj g|=  1.83355D-02
+
+At iterate    4    f=  3.31968D-01    |proj g|=  3.49866D-03
+
+At iterate    5    f=  3.30897D-01    |proj g|=  4.96123D-03
+  ys=-3.554E-07  -gs= 1.304E-06 BFGS update SKIPPED
+
+At iterate    6    f=  3.28909D-01    |proj g|=  3.39120D-03
+
+At iterate    7    f=  3.31998D-01    |proj g|=  5.66742D-03
+
+           * * *
+
+Tit   = total number of iterations
+Tnf   = total number of function evaluations
+Tnint = total number of segments explored during Cauchy searches
+Skip  = number of BFGS updates skipped
+Nact  = number of active bounds at final generalized Cauchy point
+Projg = norm of the final projected gradient
+F     = final function value
+
+           * * *
+
+   N    Tit     Tnf  Tnint  Skip  Nact     Projg        F
+    2      7     17      7     1     0   5.667D-03   3.320D-01
+  F =  0.33199793466625888     
+
+CONVERGENCE: REL_REDUCTION_OF_F_<=_FACTR*EPSMCH             
+
+ Cauchy                time 0.000E+00 seconds.
+ Subspace minimization time 0.000E+00 seconds.
+ Line search           time 0.000E+00 seconds.
+
+ Total User time 0.000E+00 seconds.
+

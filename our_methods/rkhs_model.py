@@ -143,10 +143,7 @@ def run_experiment_rkhs_2(scenario_name,rep, nystr=True):
         folder = ROOT_PATH + "/our_methods/results/" + scenario_name + "/"
     else:
         folder = ROOT_PATH + "/our_methods/results/zoo/" + scenario_name + "/"
-
-    # training settings
-    folder = ROOT_PATH + "/our_methods/results/zoo/" + scenario_name + "/"
-
+    os.makedirs(folder, exist_ok=True)
     # pre-compute constants
     k, l = Kernel('rbf'), Kernel('rbf')
     X, Y, Z = [np.vstack(e) for e in [(train.x, dev.x), (train.y, dev.y), (train.z, dev.z)]]
@@ -305,6 +302,12 @@ def plot_cv(scenario_name,seed=527):
 def plot_bayes(scenario_name, seed=527, nystr=True):
     # load data
     train, dev, test = load_data(scenario_name)
+    print("\nLoading " + scenario_name + "...")
+    if 'mnist' in scenario_name:
+        folder = ROOT_PATH + "/our_methods/results/" + scenario_name + "/"
+    else:
+        folder = ROOT_PATH + "/our_methods/results/zoo/" + scenario_name + "/"
+    os.makedirs(folder, exist_ok=True)
 
     # pre-compute constants
     k, l = Kernel('rbf'), Kernel('rbf')

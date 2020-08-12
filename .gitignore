@@ -144,3 +144,6 @@ datasets/
 *.idea
 results/
 .DS_Store
+*.err
+*.log
+*.out
