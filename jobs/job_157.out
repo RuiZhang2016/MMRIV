@@ -1,0 +1,20 @@
+params,test_err, norm:  [1.13583077 0.86656435] 0.011021732987750369 9.227814507688226
+params,test_err, norm:  [1.61024649 0.37162279] 0.003018340221056118 9.227814507688226
+True [1.61024649 0.37162279] 0.003018340221056118 9.227814507688226
+
+RUNNING THE L-BFGS-B CODE
+
+           * * *
+
+Machine precision = 2.220D-16
+ N =            2     M =           10
+
+At X0         0 variables are exactly at the bounds
+
+At iterate    0    f=  3.49569D-01    |proj g|=  3.58308D-02
+
+At iterate    1    f=  3.48020D-01    |proj g|=  3.33131D-02
+
+At iterate    2    f=  3.32155D-01    |proj g|=  2.13877D-02
+
+At iterate    3    f=  3.21277D-01    |proj g|=  4.62040D-03
