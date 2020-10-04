@@ -61,7 +61,7 @@ def run_experiment_nn(scenario_name,indices=[],seed=527,training=True):
     # load data
     print("\nLoading " + scenario_name + "...")
     
-    k,l = Kernel('rbf',True), Kernel('rbf', True)#exp_sin_squared')# Kernel('rbf')
+    k,l = Kernel('rbf',False), Kernel('rbf', False)#exp_sin_squared')# Kernel('rbf')
     use_x_images = scenario_name in ['mnist_x','mnist_xz']
     use_z_images = scenario_name in ['mnist_z','mnist_xz']
     # training settings
@@ -69,8 +69,7 @@ def run_experiment_nn(scenario_name,indices=[],seed=527,training=True):
     batch_size = 10000
     
     M = 2
-    n_train, n_test =20000,20000
-
+    n_train, n_test =20000,10000
     # kernel
     # if dev_z.shape[1] < 5:
     #     a = get_median_inter(np.vstack((train.z,dev.z)))
@@ -119,7 +118,7 @@ def run_experiment_nn(scenario_name,indices=[],seed=527,training=True):
 
     def fit(x,y,z,lr,decay_weight,n_epochs=n_epochs):
         n_data = x.shape[0]
-        net1,net2 = CNN(), Net(2)
+        net1 = CNN()
         bl = torch.tensor(1.0, requires_grad=True).float()
         al = torch.tensor(1.0, requires_grad=True).float()
         # es = EarlyStopping(patience=10)

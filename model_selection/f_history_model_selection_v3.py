@@ -1,9 +1,9 @@
 import itertools
-import torch
+import torch,os
 import torch.nn as nn
 from game_objectives.approximate_psi_objective import max_approx_psi_eval
 from model_selection.learning_eval import f_history_g_eval
-
+ROOT_PATH = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
 
 class FHistoryModelSelectionV3(object):
     def __init__(self, g_model_list, f_model_list, learning_args_list,
@@ -25,8 +25,7 @@ class FHistoryModelSelectionV3(object):
         self.psi_eval_burn_in = psi_eval_burn_in
 
     def do_model_selection(self, x_train, z_train, y_train,
-                           x_dev, z_dev, y_dev, verbose=False):
-
+                           x_dev, z_dev, y_dev,model_name=None,model_id=None, verbose=False):
         # first run learning evaluation on each hyperparameter setup
         f_of_z_dev_list = []
         e_dev_collections = []
@@ -34,6 +33,10 @@ class FHistoryModelSelectionV3(object):
             self.g_model_list, self.f_model_list, self.learning_args_list))
 
         for i, (g, f, learning_args) in enumerate(g_f_args_list):
+            if i == model_id or model_id is None:
+                pass
+            else:
+                continue
             if verbose:
                 print("starting learning args eval %d" % i)
             g.initialize()
@@ -46,8 +49,17 @@ class FHistoryModelSelectionV3(object):
                 x_dev=x_dev, z_dev=z_dev, y_dev=y_dev,
                 g=g, f=f, g_optimizer=g_optimizer, f_optimizer=f_optimizer,
                 game_objective=game_objective)
-            f_of_z_dev_list.extend(f_of_z_dev_list)
-            e_dev_collections.append(e_dev_list)
+            if model_id is None:
+                f_of_z_dev_list.extend(f_of_z_dev_list)
+                e_dev_collections.append(e_dev_list)
+            else:
+                torch.save({'f_of_z_dev_list':f_of_z_dev_list,'e_dev_list':e_dev_list},ROOT_PATH+'/tmp/{}_{}.npz'.format(model_name,model_id))
+                assert 1 == 0
+        if model_id == -1:
+            for mid in range(3):
+                res = torch.load(ROOT_PATH+'/tmp/{}_{}.npz'.format(model_name,mid))
+                f_of_z_dev_list.extend(res['f_of_z_dev_list'])
+                e_dev_collections.append(res['e_dev_list'])
 
         # now find best hyperparameter setup based on saved parameters
         best_learning_args = None

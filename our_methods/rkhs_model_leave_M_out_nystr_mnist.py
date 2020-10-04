@@ -19,6 +19,8 @@ from torchvision import datasets, transforms
 import random
 from collections import defaultdict
 from sklearn.decomposition import PCA
+import time 
+from sklearn.preprocessing import StandardScaler
 
 Nfeval = 1
 seed = 527
@@ -59,15 +61,22 @@ def test_LMO_err(sname, seed,use_x_images,use_z_images, nystr=True):
     def LMO_err(params,M=2,verbal=False):
         n_params = len(params)
         # params = np.exp(params)
-        al,bl = params # params[:int(n_params/2)], params[int(n_params/2):] #  [np.exp(e) for e in params]
-        L = bl*bl*np.exp(-L0/al/al/2)+1e-6*EYEN # l(X,None,al,bl)+1e-6*EYEN# l(X,None,al,bl,cl)
+        params = np.exp(params)
+        al,bl = params[:-1],params[-1] # params[:int(n_params/2)], params[int(n_params/2):] #  [np.exp(e) for e in params]
+        t0 = time.time()
+        L = 0
+        for i in range(len(al)):
+            L += L0[i]/al[i]/al[i]/2
+        L = bl*bl*np.exp(-L)+1e-6*EYEN # bl*bl*np.exp(-np.sum([L0[i]/al[i]/al[i]/2 for i in range(len(al))],axis=0))+1e-6*EYEN# bl*bl*np.exp(-L)+1e-6*EYEN
         # L_inv = chol_inv(L)
-        C = L-L@eig_vec_K@np.linalg.inv(eig_vec_K.T@L@eig_vec_K/N2+np.diag(1/eig_val_K/N2))@eig_vec_K.T@L/N2
-        c = C@W_nystr@Y*N2
+        tmp_mat = L@eig_vec_K
+        C = L-tmp_mat@np.linalg.inv(eig_vec_K.T@tmp_mat/N2+inv_eig_val)@tmp_mat.T/N2
+        c = C@W_nystr_Y*N2
         c_y = c-Y
         lmo_err = 0
         N = 0
-        for ii in range(4):
+        t0 = time.time()
+        for ii in range(1):
             permutation = np.random.permutation(X.shape[0])
             for i in range(0,X.shape[0],M):
                 indices = permutation[i:i + M]
@@ -78,42 +87,47 @@ def test_LMO_err(sname, seed,use_x_images,use_z_images, nystr=True):
                 # print(I_CW_inv.shape,c_y_i.shape)
                 lmo_err += b_y.T@K_i@b_y
                 N += 1
-        return lmo_err[0,0]
+        return lmo_err[0,0]/N/M**2
     
     def callback0(params):
         global Nfeval, prev_norm, opt_params, opt_test_err
         if Nfeval % 1 == 0:
             n_params = len(params)
-            al,bl = params # params[:int(n_params/2)], params[int(n_params/2):]
+            params = np.exp(params)
+            al,bl = params[:-1],params[-1] # params[:int(n_params/2)], params[int(n_params/2):]
             # print('Nfeval: ', Nfeval, 'params: ', [al._value,bl._value, JITTER._value])
-            L = bl*bl*np.exp(-L0/al/al/2)+1e-6*EYEN# np.exp(-L0/al/al/2)*bl*bl+1e-6*EYEN
+            L = 0
+            for i in range(len(al)):
+                L += L0[i]/al[i]/al[i]/2
+            L = bl*bl*np.exp(-L)+1e-6*EYEN
+            
             # L = l(X, None, al, bl)+1e-6*EYEN
             # L_inv = chol_inv(L+JITTER*EYEN)
             if nystr:
-                alpha = EYEN-eig_vec_K@np.linalg.inv(eig_vec_K.T@L@eig_vec_K/N2+np.diag(1/eig_val_K/N2))@eig_vec_K.T@L/N2
-                alpha = alpha@W_nystr@Y*N2
+                tmp_mat = eig_vec_K.T@L
+                alpha = EYEN-eig_vec_K@np.linalg.inv(tmp_mat@eig_vec_K/N2+inv_eig_val)@tmp_mat/N2
+                alpha = alpha@W_nystr_Y*N2
             else:
                 LWL_inv = chol_inv(L@W@L+L/N2+JITTER*EYEN)
                 alpha = LWL_inv@L@W@Y
-            test_L = l(test_X,X,al,bl)# np.exp(-test_L0/al/al/2)*bl*bl # l(test_X, X, al,bl)# np.exp(-test_L0/al/al/2)*bl*bl
+            test_L = np.exp(-np.sum(np.array([test_L0[i]/al[i]/al[i]/2 for i in range(len(al))]),axis=0))*bl*bl # l(test_X, X, al,bl)# np.exp(-test_L0/al/al/2)*bl*bl
             pred_mean = test_L@alpha
             test_err = ((pred_mean-test_G)**2).mean()
             norm = alpha.T @ L @ alpha
         Nfeval += 1
-        # if prev_norm is not None:
-        #    if norm[0,0]/prev_norm >=3:
-        #        if opt_test_err is None:
-        #            prev_norm = norm[0,0]
-        #            opt_test_err = test_err
-        #            opt_params = params
-        #        print(True,opt_params, opt_test_err,prev_norm)
-        #        raise Exception
+        if prev_norm is not None:
+            if norm[0,0]/prev_norm >=3:
+                if opt_test_err is None:
+                    opt_test_err = test_err
+                    opt_params = params
+                print(True,opt_params, opt_test_err,prev_norm, norm[0,0])
+                raise Exception
         
-        #if prev_norm is None or norm[0,0]<= prev_norm:
-        prev_norm = norm[0,0]
+        if prev_norm is None or norm[0,0]<= prev_norm:
+            prev_norm = norm[0,0]
         opt_test_err = test_err
         opt_params = params
-        print(True,opt_params, opt_test_err, prev_norm)
+        print(True,opt_params, opt_test_err, prev_norm, norm[0,0])
 
     funcs = {'sin':lambda x: np.sin(x),
             'step':lambda x: 0* (x<0) +1* (x>=0),
@@ -124,25 +138,42 @@ def test_LMO_err(sname, seed,use_x_images,use_z_images, nystr=True):
     use_x_images = sname in ['mnist_x','mnist_xz']
     use_z_images = sname in ['mnist_z','mnist_xz']
     M = 2
-    n_train, n_test =4000,20000
+    n_train, n_test =10000,10000
     X, Y, Z, test_X, test_G = [e.numpy() if torch.is_tensor(e) else e for e in data_generate('abs',n_train, n_test, use_x_images, use_z_images)]
-    print(X[:5])
     # batch_size = 1000
+    print('finish data generating')
+    pca = PCA(n_components=16)
+    pca.fit(X)
+    X = pca.transform(X)
+    test_X = pca.transform(test_X)
+    scaler = StandardScaler()
+    scaler.fit(X)
+    X = scaler.transform(X)
+    test_X = scaler.transform(test_X)
+
     for _ in range(seed+1):
         random_indices = np.sort(np.random.choice(range(X.shape[0]),nystr_M,replace=False))
-    params0 = [1.1,0.9]
-    bounds =  [[1e-2,10],[1e-2,10]]
+    params0 = np.random.randn(X.shape[1]+1)*0.1# [0.5]*X.shape[1]+[0.05]
+    bounds =  None # [[1e-6,10]]*X.shape[1]+[[1e-1,10]]
     EYEN = np.eye(Z.shape[0])
     N2 = X.shape[0]**2
-    ak = get_median_inter_mnist(Z)
-    W = (k(Z,None,ak,1)+k(Z,None,ak*10,1)+k(Z,None,ak/10,1))/3
-    W /= N2
-    L0, test_L0 = _sqdist(X,None), _sqdist(test_X,X)
-
+    ak = 3.0 # get_median_inter_mnist(Z)
+    W0 = _sqdist(Z,None)
+    W = (np.exp(-W0/2)+np.exp(-W0/ak/ak/200)+np.exp(-W0/ak/ak*50))/3/N2
+    t0 = time.time()
+    L0 = Parallel(n_jobs = 16)(delayed(_sqdist)(X[:,[i]],None) for i in range(X.shape[1]))
+    test_L0 = Parallel(n_jobs = 16)(delayed(_sqdist)(test_X[:,[i]],X[:,[i]]) for i in range(X.shape[1]))
+    # np.savez('../mnist_precomp/L0s',L0 = L0, test_L0=test_L0)
+    # precomp_mat = np.load('../mnist_precomp/L0s.npz')
+    # L0 = precomp_mat['L0']
+    # test_L0 = precomp_mat['test_L0']
+    print(time.time()-t0)
+    # # L0, test_L0 = _sqdist(X,None), _sqdist(test_X,X)
     eig_val_K,eig_vec_K = nystrom_decomp(W*N2, random_indices)
-    W_nystr = eig_vec_K @ np.diag(eig_val_K) @ eig_vec_K.T/N2
+    W_nystr_Y = eig_vec_K @ np.diag(eig_val_K) @ eig_vec_K.T@Y/N2
+    inv_eig_val = np.diag(1/eig_val_K/N2)
     obj_grad = value_and_grad(lambda params: LMO_err(params))
-    res = minimize(obj_grad, x0=params0,bounds=bounds, method='L-BFGS-B',jac=True,options={'maxiter':5,'disp':True},callback=callback0)
+    res = minimize(obj_grad, x0=params0,bounds=bounds, method='L-BFGS-B',jac=True,options={'maxiter':5000,'disp':True},callback=callback0)
 
     #for epoch in range(100):
     #    batch_permutation = np.random.permutation(X.shape[0])

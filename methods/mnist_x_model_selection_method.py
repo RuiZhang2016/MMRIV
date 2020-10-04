@@ -31,7 +31,7 @@ class MNISTXModelSelectionMethod(AbstractMethod):
             DefaultCNN(cuda=enable_cuda),
         ]
         f_models = [
-            MLPModel(input_dim=1, layer_widths=[20],
+            MLPModel(input_dim=2, layer_widths=[20],
                      activation=nn.LeakyReLU).double(),
         ]
         if enable_cuda:
@@ -63,7 +63,7 @@ class MNISTXModelSelectionMethod(AbstractMethod):
         f_simple_model_eval = SGDSimpleModelEval(
             max_num_epoch=100, max_no_progress=10, batch_size=1024, eval_freq=1)
         learning_eval = FHistoryLearningEvalSGDNoStop(
-            num_epochs=60, eval_freq=1, batch_size=1024)
+            num_epochs=60, eval_freq=1, batch_size=1024) # 60
         self.model_selection = FHistoryModelSelectionV3(
             g_model_list=g_models,
             f_model_list=f_models,
@@ -77,12 +77,12 @@ class MNISTXModelSelectionMethod(AbstractMethod):
         )
         self.default_g_opt_factory = default_g_opt_factory
 
-    def fit(self, x_train, z_train, y_train, x_dev, z_dev, y_dev,
+    def fit(self, x_train, z_train, y_train, x_dev, z_dev, y_dev,rep,model_id,
             video_plotter=None, verbose=False, g_dev=None):
         g, f, learning_args, dev_f_collection, e_dev_tilde = \
             self.model_selection.do_model_selection(
                 x_train=x_train, z_train=z_train, y_train=y_train,
-                x_dev=x_dev, z_dev=z_dev, y_dev=y_dev, verbose=verbose)
+                x_dev=x_dev, z_dev=z_dev, y_dev=y_dev, model_name ='MNIST_X_{}'.format(rep), model_id=model_id ,verbose=verbose)
         self.g = g
         self.f = f
         self.dev_f_collection = dev_f_collection

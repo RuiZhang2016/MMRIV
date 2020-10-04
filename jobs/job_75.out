@@ -1,53 +1,203 @@
-params,test_err, norm:  [1.10096385 0.89917238] 0.019382825558574828 10.76102760533532
-params,test_err, norm:  [1.16920671 0.86839056] 0.01879959229648462 10.174834322896734
-params,test_err, norm:  [1.4025317  0.71216739] 0.016870913748073334 9.417059750315065
-params,test_err, norm:  [1.77192608 0.41576141] 0.01818836153664882 8.703368678732264
-params,test_err, norm:  [1.6297357  0.52212393] 0.01640076984730556 8.703368678732264
-params,test_err, norm:  [1.6297357  0.52212393] 0.01640076984730556 8.703368678732264
-RUNNING THE L-BFGS-B CODE
-
-           * * *
-
-Machine precision = 2.220D-16
- N =            2     M =           10
-
-At X0         0 variables are exactly at the bounds
-
-At iterate    0    f=  3.41277D-01    |proj g|=  2.68494D-02
-
-At iterate    1    f=  3.39083D-01    |proj g|=  2.69826D-02
-
-At iterate    2    f=  3.37154D-01    |proj g|=  1.99074D-02
-
-At iterate    3    f=  3.32555D-01    |proj g|=  1.36041D-02
-
-At iterate    4    f=  3.30930D-01    |proj g|=  7.92403D-03
-
-At iterate    5    f=  3.28214D-01    |proj g|=  2.50870D-03
-
-At iterate    6    f=  3.28657D-01    |proj g|=  3.66287D-03
-
-           * * *
-
-Tit   = total number of iterations
-Tnf   = total number of function evaluations
-Tnint = total number of segments explored during Cauchy searches
-Skip  = number of BFGS updates skipped
-Nact  = number of active bounds at final generalized Cauchy point
-Projg = norm of the final projected gradient
-F     = final function value
-
-           * * *
-
-   N    Tit     Tnf  Tnint  Skip  Nact     Projg        F
-    2      6     17      6     0     0   3.663D-03   3.287D-01
-  F =  0.32865741119065012     
-
-CONVERGENCE: REL_REDUCTION_OF_F_<=_FACTR*EPSMCH             
-
- Cauchy                time 0.000E+00 seconds.
- Subspace minimization time 0.000E+00 seconds.
- Line search           time 0.000E+00 seconds.
-
- Total User time 0.000E+00 seconds.
+training
+lr, dw 0.0001 1e-07
+test tensor(0.1455, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.1427, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1387, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1309, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1223, grad_fn=<MeanBackward0>) dev tensor(0.0004, grad_fn=<SelectBackward>)
+test tensor(0.1191, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1129, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1075, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.1015, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0943, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0864, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0799, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0758, grad_fn=<MeanBackward0>) dev tensor(8.4824e-05, grad_fn=<SelectBackward>)
+test tensor(0.0705, grad_fn=<MeanBackward0>) dev tensor(8.2431e-05, grad_fn=<SelectBackward>)
+test tensor(0.0639, grad_fn=<MeanBackward0>) dev tensor(9.3126e-05, grad_fn=<SelectBackward>)
+test tensor(0.0591, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0547, grad_fn=<MeanBackward0>) dev tensor(9.7385e-05, grad_fn=<SelectBackward>)
+test tensor(0.0515, grad_fn=<MeanBackward0>) dev tensor(9.6170e-05, grad_fn=<SelectBackward>)
+test tensor(0.0476, grad_fn=<MeanBackward0>) dev tensor(8.1039e-05, grad_fn=<SelectBackward>)
+test tensor(0.0435, grad_fn=<MeanBackward0>) dev tensor(8.6593e-05, grad_fn=<SelectBackward>)
+test tensor(0.0400, grad_fn=<MeanBackward0>) dev tensor(9.0836e-05, grad_fn=<SelectBackward>)
+test tensor(0.0364, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0327, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0307, grad_fn=<MeanBackward0>) dev tensor(5.1424e-05, grad_fn=<SelectBackward>)
+test tensor(0.0276, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0254, grad_fn=<MeanBackward0>) dev tensor(6.7523e-05, grad_fn=<SelectBackward>)
+test tensor(0.0231, grad_fn=<MeanBackward0>) dev tensor(5.5108e-05, grad_fn=<SelectBackward>)
+test tensor(0.0209, grad_fn=<MeanBackward0>) dev tensor(5.9041e-05, grad_fn=<SelectBackward>)
+test tensor(0.0192, grad_fn=<MeanBackward0>) dev tensor(3.2605e-05, grad_fn=<SelectBackward>)
+test tensor(0.0175, grad_fn=<MeanBackward0>) dev tensor(3.1324e-05, grad_fn=<SelectBackward>)
+test tensor(0.0166, grad_fn=<MeanBackward0>) dev tensor(3.5579e-05, grad_fn=<SelectBackward>)
+test tensor(0.0148, grad_fn=<MeanBackward0>) dev tensor(3.4355e-05, grad_fn=<SelectBackward>)
+test tensor(0.0133, grad_fn=<MeanBackward0>) dev tensor(9.3437e-05, grad_fn=<SelectBackward>)
+test tensor(0.0121, grad_fn=<MeanBackward0>) dev tensor(2.6540e-05, grad_fn=<SelectBackward>)
+test tensor(0.0113, grad_fn=<MeanBackward0>) dev tensor(5.7626e-05, grad_fn=<SelectBackward>)
+test tensor(0.0095, grad_fn=<MeanBackward0>) dev tensor(2.6397e-05, grad_fn=<SelectBackward>)
+test tensor(0.0084, grad_fn=<MeanBackward0>) dev tensor(5.1396e-05, grad_fn=<SelectBackward>)
+test tensor(0.0078, grad_fn=<MeanBackward0>) dev tensor(5.6164e-05, grad_fn=<SelectBackward>)
+test tensor(0.0069, grad_fn=<MeanBackward0>) dev tensor(5.0080e-05, grad_fn=<SelectBackward>)
+test tensor(0.0060, grad_fn=<MeanBackward0>) dev tensor(8.9465e-05, grad_fn=<SelectBackward>)
+test tensor(0.0055, grad_fn=<MeanBackward0>) dev tensor(5.8650e-05, grad_fn=<SelectBackward>)
+lr, dw 0.0001 1e-07
+test tensor(0.1473, grad_fn=<MeanBackward0>) dev tensor(0.0005, grad_fn=<SelectBackward>)
+test tensor(0.1472, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.1441, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1372, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.1320, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.1299, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1198, grad_fn=<MeanBackward0>) dev tensor(0.0006, grad_fn=<SelectBackward>)
+test tensor(0.1204, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1151, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1080, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.1037, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.0994, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.0964, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0907, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0854, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0833, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0804, grad_fn=<MeanBackward0>) dev tensor(8.0473e-05, grad_fn=<SelectBackward>)
+test tensor(0.0732, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.0698, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0663, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0633, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0588, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+lr, dw 0.0001 1e-07
+test tensor(0.0944, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0873, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0832, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0734, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.0716, grad_fn=<MeanBackward0>) dev tensor(8.8307e-05, grad_fn=<SelectBackward>)
+test tensor(0.0618, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0580, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0527, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0498, grad_fn=<MeanBackward0>) dev tensor(6.9822e-05, grad_fn=<SelectBackward>)
+test tensor(0.0460, grad_fn=<MeanBackward0>) dev tensor(6.1889e-05, grad_fn=<SelectBackward>)
+test tensor(0.0385, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0349, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0327, grad_fn=<MeanBackward0>) dev tensor(7.2164e-05, grad_fn=<SelectBackward>)
+test tensor(0.0300, grad_fn=<MeanBackward0>) dev tensor(4.7134e-05, grad_fn=<SelectBackward>)
+test tensor(0.0252, grad_fn=<MeanBackward0>) dev tensor(7.3519e-05, grad_fn=<SelectBackward>)
+test tensor(0.0220, grad_fn=<MeanBackward0>) dev tensor(6.0719e-05, grad_fn=<SelectBackward>)
+test tensor(0.0195, grad_fn=<MeanBackward0>) dev tensor(4.9339e-05, grad_fn=<SelectBackward>)
+test tensor(0.0163, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0144, grad_fn=<MeanBackward0>) dev tensor(5.6841e-05, grad_fn=<SelectBackward>)
+lr, dw 0.0001 1e-07
+test tensor(0.1061, grad_fn=<MeanBackward0>) dev tensor(0.0006, grad_fn=<SelectBackward>)
+test tensor(0.1100, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1065, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.1064, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1028, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0998, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0955, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.0928, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0917, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0872, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0868, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0793, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0779, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0742, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0681, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0648, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+lr, dw 0.0001 1e-07
+test tensor(0.1221, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1186, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.1107, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1068, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0993, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0917, grad_fn=<MeanBackward0>) dev tensor(0.0004, grad_fn=<SelectBackward>)
+test tensor(0.0880, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0828, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0777, grad_fn=<MeanBackward0>) dev tensor(9.3503e-05, grad_fn=<SelectBackward>)
+test tensor(0.0704, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.0676, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0616, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0573, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0544, grad_fn=<MeanBackward0>) dev tensor(9.7637e-05, grad_fn=<SelectBackward>)
+lr, dw 0.0001 1e-07
+test tensor(0.0787, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.0750, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0704, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0635, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0574, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0532, grad_fn=<MeanBackward0>) dev tensor(8.2970e-05, grad_fn=<SelectBackward>)
+test tensor(0.0492, grad_fn=<MeanBackward0>) dev tensor(7.4716e-05, grad_fn=<SelectBackward>)
+test tensor(0.0434, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0387, grad_fn=<MeanBackward0>) dev tensor(7.0692e-05, grad_fn=<SelectBackward>)
+test tensor(0.0336, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0301, grad_fn=<MeanBackward0>) dev tensor(8.7877e-05, grad_fn=<SelectBackward>)
+test tensor(0.0276, grad_fn=<MeanBackward0>) dev tensor(4.5921e-05, grad_fn=<SelectBackward>)
+test tensor(0.0226, grad_fn=<MeanBackward0>) dev tensor(8.7177e-05, grad_fn=<SelectBackward>)
+test tensor(0.0201, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0180, grad_fn=<MeanBackward0>) dev tensor(4.8481e-05, grad_fn=<SelectBackward>)
+test tensor(0.0150, grad_fn=<MeanBackward0>) dev tensor(4.9700e-05, grad_fn=<SelectBackward>)
+test tensor(0.0132, grad_fn=<MeanBackward0>) dev tensor(3.4968e-05, grad_fn=<SelectBackward>)
+test tensor(0.0107, grad_fn=<MeanBackward0>) dev tensor(7.7446e-05, grad_fn=<SelectBackward>)
+test tensor(0.0097, grad_fn=<MeanBackward0>) dev tensor(3.7692e-05, grad_fn=<SelectBackward>)
+test tensor(0.0074, grad_fn=<MeanBackward0>) dev tensor(2.9487e-05, grad_fn=<SelectBackward>)
+test tensor(0.0058, grad_fn=<MeanBackward0>) dev tensor(6.6132e-05, grad_fn=<SelectBackward>)
+test tensor(0.0048, grad_fn=<MeanBackward0>) dev tensor(3.5033e-05, grad_fn=<SelectBackward>)
+test tensor(0.0042, grad_fn=<MeanBackward0>) dev tensor(5.1915e-05, grad_fn=<SelectBackward>)
+test tensor(0.0028, grad_fn=<MeanBackward0>) dev tensor(2.5688e-05, grad_fn=<SelectBackward>)
+test tensor(0.0022, grad_fn=<MeanBackward0>) dev tensor(2.7751e-05, grad_fn=<SelectBackward>)
+test tensor(0.0016, grad_fn=<MeanBackward0>) dev tensor(5.0542e-05, grad_fn=<SelectBackward>)
+test tensor(0.0011, grad_fn=<MeanBackward0>) dev tensor(2.1831e-05, grad_fn=<SelectBackward>)
+test tensor(0.0007, grad_fn=<MeanBackward0>) dev tensor(2.0699e-05, grad_fn=<SelectBackward>)
+test tensor(0.0005, grad_fn=<MeanBackward0>) dev tensor(2.4279e-05, grad_fn=<SelectBackward>)
+test tensor(0.0003, grad_fn=<MeanBackward0>) dev tensor(1.8334e-05, grad_fn=<SelectBackward>)
+test tensor(0.0003, grad_fn=<MeanBackward0>) dev tensor(2.1698e-05, grad_fn=<SelectBackward>)
+test tensor(0.0003, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0005, grad_fn=<MeanBackward0>) dev tensor(4.4471e-05, grad_fn=<SelectBackward>)
+test tensor(0.0008, grad_fn=<MeanBackward0>) dev tensor(3.6226e-05, grad_fn=<SelectBackward>)
+test tensor(0.0010, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+lr, dw 0.0001 1e-07
+test tensor(0.1257, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.1197, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.1144, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1090, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1051, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0962, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0897, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0839, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.0811, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0771, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0702, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0661, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0607, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0582, grad_fn=<MeanBackward0>) dev tensor(6.3807e-05, grad_fn=<SelectBackward>)
+test tensor(0.0514, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0467, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0429, grad_fn=<MeanBackward0>) dev tensor(0.0001, grad_fn=<SelectBackward>)
+test tensor(0.0402, grad_fn=<MeanBackward0>) dev tensor(7.3053e-05, grad_fn=<SelectBackward>)
+test tensor(0.0369, grad_fn=<MeanBackward0>) dev tensor(7.0470e-05, grad_fn=<SelectBackward>)
+lr, dw 0.0001 1e-07
+test tensor(0.1395, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.1367, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.1328, grad_fn=<MeanBackward0>) dev tensor(0.0004, grad_fn=<SelectBackward>)
+test tensor(0.1314, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1262, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.1221, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1159, grad_fn=<MeanBackward0>) dev tensor(0.0004, grad_fn=<SelectBackward>)
+test tensor(0.1138, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.1089, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+lr, dw 0.0001 1e-07
+test tensor(0.1352, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1248, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.1196, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.1113, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+test tensor(0.1066, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0980, grad_fn=<MeanBackward0>) dev tensor(0.0003, grad_fn=<SelectBackward>)
+lr, dw 0.0001 1e-07
+test tensor(0.1020, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0938, grad_fn=<MeanBackward0>) dev tensor(0.0005, grad_fn=<SelectBackward>)
+test tensor(0.0935, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0881, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0806, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0766, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0718, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+test tensor(0.0664, grad_fn=<MeanBackward0>) dev tensor(0.0002, grad_fn=<SelectBackward>)
+params,test_err, norm:  [ 0.63651997 -0.72162289] 0.014522721244349697 16.015814677991678 16.015814677991678
+True [ 0.63651997 -0.72162289] 0.014522721244349697 16.015814677991678 70.79753582736436
 
