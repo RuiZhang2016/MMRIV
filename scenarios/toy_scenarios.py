@@ -79,7 +79,7 @@ class Zoo(HingeLinearScenario):
         elif func=='sin':
             return np.sin(x)
         elif func=='step':
-            return 1. * (x<0) + 2.5 * (x>=0)
+            return 0. * (x<0) + 1. * (x>=0)
         elif func=='3dpoly':
             return -1.5 * x + .9 * (x**2) + x**3
         elif func=='linear':
@@ -112,7 +112,7 @@ class AGMMZoo(Zoo):
                 + 2 * confounder * (1 - iv_strength) + \
                 np.random.normal(0, .1, size=(num_data, 1))
         g = self._true_g_function_np(x) 
-        y = g + 2 * confounder + \
+        y = g + confounder + \
             np.random.normal(0, .1, size=(num_data, 1))
         
         return x, z, y, g, x

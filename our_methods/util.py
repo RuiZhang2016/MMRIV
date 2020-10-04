@@ -1,5 +1,6 @@
-import os
-ROOT_PATH = os.path.split(os.getcwd())[0]
+import os,sys
+ROOT_PATH = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
+sys.path.append(ROOT_PATH)
 import torch
 from scenarios.abstract_scenario import AbstractScenario
 import autograd.numpy as np
@@ -7,7 +8,6 @@ import logging
 from joblib import Parallel, delayed
 import random
 from torchvision import datasets, transforms
-import random
 from collections import defaultdict
 import math
 
@@ -32,6 +32,7 @@ def _sqdist(x,y,Torch=False):
     else:
         diffs = np.expand_dims(x,1)-np.expand_dims(y,0)
         sqdist = np.sum(diffs**2, axis=2)
+        del diffs
     return sqdist
 
 def get_median_inter_mnist(x):
@@ -41,22 +42,20 @@ def get_median_inter_mnist(x):
     if x.shape[0]< 10000:
         sqdist = _sqdist(x,None)
     else:
-        M = int(x.shape[0]/40)
+        M = int(x.shape[0]/400)
         sqdist = Parallel(n_jobs=20)(delayed(_sqdist)(x[i:i+M],x) for i in range(0,x.shape[0],M))
     dist = np.sqrt(sqdist)
     return np.median(dist.flatten())
 
-def load_data(scenario_name,verbal=False):
+def load_data(scenario_path,verbal=False, Torch=False):
     # load data
     # print("\nLoading " + scenario_name + "...")
-    if 'mnist' in scenario_name:
-        scenario_path = ROOT_PATH + "/data/" + scenario_name + "/main.npz"
-    else:
-        scenario_path = ROOT_PATH + "/data/zoo/" + scenario_name + ".npz"
     scenario = AbstractScenario(filename=scenario_path)
     scenario.to_2d()
     if verbal:
         scenario.info()
+    if Torch:
+        scenario.to_tensor()
 
     train = scenario.get_dataset("train")
     dev = scenario.get_dataset("dev")
@@ -176,8 +175,8 @@ def data_generate(sname, n_train, n_test, use_x_images, use_z_images):
 
     Z,test_Z = np.random.uniform(-3,3,size=(n_train,2)),np.random.uniform(-3,3,size=(n_test,2))# np.random.normal(0,np.sqrt(2),size=(n_train,1))# np.random.uniform(-3,3,size=(n_train+n_test,2))
     cofounder,test_cofounder = np.random.normal(0,1,size=(n_train,1)),np.random.normal(0,1,size=(n_test,1))
-    gamma,test_gamma = np.random.normal(0,np.sqrt(0.1),size=(n_train,1)),np.random.normal(0,np.sqrt(0.1),size=(n_test,1))
-    delta, test_delta = np.random.normal(0,np.sqrt(0.1),size=(n_train,1)),np.random.normal(0,np.sqrt(0.1),size=(n_test,1))
+    gamma,test_gamma = np.random.normal(0,.1,size=(n_train,1)),np.random.normal(0,.1,size=(n_test,1))
+    delta, test_delta = np.random.normal(0,.1,size=(n_train,1)),np.random.normal(0,.1,size=(n_test,1))
     X = Z[:,[0]]+cofounder+gamma
     test_X = test_Z[:,[0]] + test_cofounder+test_gamma
     
@@ -188,17 +187,18 @@ def data_generate(sname, n_train, n_test, use_x_images, use_z_images):
     Y =func(X) + cofounder+delta
     test_G = func(test_X)
     train_Y = Y[:int(n_train/2)]
-    test_G = (test_G - train_Y.mean())/train_Y.std()
-    Y = (Y-train_Y.mean())/train_Y.std()
     
     if use_x_images:
         X_digits = np.clip(1.5*X + 5.0, 0, 9).round()
         test_X_digits = np.clip(1.5*test_X + 5.0, 0, 9).round()
         X = np.stack([random.choice(digit_dict[int(d)]).flatten() for d in X_digits.flatten()], axis=0)
-        test_X = np.stack([random.choice(digit_dict[int(d)]).flatten() for d in test_X_digits.flatten()], axis=0)
+        test_X =  np.stack([random.choice(digit_dict[int(d)]).flatten() for d in test_X_digits.flatten()], axis=0)
+        test_G = np.abs((test_X_digits - 5.0) / 1.5).reshape(-1, 1)
     if use_z_images:
         Z_digits = np.clip(1.5*Z[:, [0]] + 5.0, 0, 9).round()
         Z = np.stack([random.choice(digit_dict[int(d)]).flatten() for d in Z_digits.flatten()], axis=0)
+    test_G = (test_G - train_Y.mean())/train_Y.std()
+    Y = (Y-train_Y.mean())/train_Y.std()
     return X,Y,Z,test_X, test_G
 
 def nystrom_decomp(G,ind, Torch=False):
@@ -219,4 +219,12 @@ def nystrom_decomp(G,ind, Torch=False):
     else:
         return eig_val, eig_vec
 
-
+def remove_outliers(array):
+    if not isinstance(array, np.ndarray):
+        raise Exception('input type should be numpy ndarray, instead of {}'.format(type(array)))
+    Q1 = np.quantile(array,0.25)
+    Q3 = np.quantile(array,0.75)
+    IQR = Q3 - Q1
+    array = array[array<=Q3+1.5*IQR]
+    array = array[ array>= Q1-1.5*IQR]
+    return array

@@ -7,7 +7,6 @@ from torchvision import datasets, transforms
 from scenarios.abstract_scenario import AbstractScenario
 from scenarios.toy_scenarios import AGMMZoo
 
-
 class AbstractMNISTScenario(AbstractScenario):
     def __init__(self, use_x_images, use_z_images, g_function):
         AbstractScenario.__init__(self)
@@ -55,7 +54,7 @@ class AbstractMNISTScenario(AbstractScenario):
         self.data_i = 0
 
         self.toy_scenario = AGMMZoo(
-            g_function=g_function, two_gps=False, n_instruments=1,
+            g_function=g_function, two_gps=False, n_instruments=2,
             iv_strength=0.5)
 
         self.use_x_images = use_x_images
@@ -126,24 +125,25 @@ class AbstractMNISTScenario(AbstractScenario):
         # return x, z, y, g, w
 
         toy_x, toy_z, toy_y, toy_g, _ = self.toy_scenario.generate_data(num_data)
+        print(toy_x)
         if self.use_x_images:
             x_digits = np.clip(1.5*toy_x[:, 0] + 5.0, 0, 9).round()
             x = self._sample_images(x_digits, images, labels).reshape(-1, 1, 28, 28)
             # g = self._g_step_function(x_digits).reshape(-1, 1)
             g = self.toy_scenario._true_g_function_np((x_digits - 5.0) / 1.5).reshape(-1, 1)
             w = x_digits.reshape(-1, 1)
+            # print([np.mean(e[0],axis=0) for e in x[:2]])
         else:
-            x = toy_x.reshape(-1, 1) * 1.5 + 5.0
-            g = toy_g.reshape(-1, 1)
-            w = toy_x.reshape(-1, 1) * 1.5 + 5.0
+            x = toy_x
+            g = toy_g
+            w = toy_x
 
         if self.use_z_images:
             z_digits = np.clip(1.5*toy_z[:, 0] + 5.0, 0, 9).round()
             z = self._sample_images(z_digits, images, labels).reshape(-1, 1, 28, 28)
         else:
-            z = toy_z.reshape(-1, 1)
+            z = toy_z
 
-        # print(np.stack([w[:20, 0], g[:20, 0]]))
         return x, z, toy_y, g, w
 
     def true_g_function(self, x):

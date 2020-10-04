@@ -1,0 +1,8 @@
+/lustre/home/ruizhang/MMR/our_methods/rkhs_model_leave_M_out_nystr_mendelian.py:35: RuntimeWarning: divide by zero encountered in true_divide
+  eig_vec = np.sqrt(len(ind) / G.shape[0]) * Gnm@eig_vec/eig_val
+/lustre/home/ruizhang/MMR/our_methods/rkhs_model_leave_M_out_nystr_mendelian.py:154: RuntimeWarning: divide by zero encountered in true_divide
+  inv_eig_val_K = np.diag(1/eig_val_K/N2)
+/lustre/home/ruizhang/MMR/our_methods/rkhs_model_leave_M_out_nystr_mendelian.py:155: RuntimeWarning: invalid value encountered in matmul
+  W_nystr = eig_vec_K @ np.diag(eig_val_K)@eig_vec_K.T/N2
+/home/ruizhang/miniconda3/envs/py36/lib/python3.6/site-packages/autograd/tracer.py:48: RuntimeWarning: invalid value encountered in matmul
+  return f_raw(*args, **kwargs)

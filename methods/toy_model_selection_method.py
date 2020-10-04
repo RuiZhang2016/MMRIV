@@ -17,10 +17,10 @@ from model_selection.simple_model_eval import GradientDecentSimpleModelEval, \
 from models.mlp_model import MLPModel
 from optimizers.oadam import OAdam
 from optimizers.optimizer_factory import OptimizerFactory
-
+import time
 
 class ToyModelSelectionMethod(AbstractMethod):
-    def __init__(self, enable_cuda=False):
+    def __init__(self,f_input=2, enable_cuda=False):
         AbstractMethod.__init__(self)
         self.g = None
         self.f = None
@@ -31,7 +31,7 @@ class ToyModelSelectionMethod(AbstractMethod):
                      activation=nn.LeakyReLU).double(),
         ]
         f_models = [
-            MLPModel(input_dim=2, layer_widths=[20],
+            MLPModel(input_dim=f_input, layer_widths=[20],
                      activation=nn.LeakyReLU).double(),
         ]
         if torch.cuda.is_available() and enable_cuda:
@@ -98,9 +98,11 @@ class ToyModelSelectionMethod(AbstractMethod):
             video_plotter=video_plotter, do_averaging=False,
             max_num_epochs=6000, eval_freq=20, batch_size=1024,
             print_freq_mul=5, burn_in=1000, max_no_progress=20)
+        t0 = time.time()
         learner.fit_from_tensors(x_train, y_train, z_train,
                                  x_dev, z_dev, y_dev, w_train=x_train,
                                  g_dev=g_dev, verbose=verbose)
+        return time.time()-t0
 
     def predict(self, x_test):
         if self.g is None:

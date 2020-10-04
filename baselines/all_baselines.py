@@ -30,7 +30,7 @@ import statsmodels.sandbox.regression.gmm
 import statsmodels.tools.tools
 
 import os
-
+import time
 
 class SklearnBaseline(AbstractBaseline):
     def _predict(self, x, context):
@@ -115,6 +115,7 @@ class DirectMNIST(AbstractBaseline):
         if torch.cuda.is_available():
             x = x.cuda()
             y = y.cuda()
+        t0 = time.time()
         train = data_utils.DataLoader(data_utils.TensorDataset(x, y),
                                       batch_size=self._n_batch_size,
                                       shuffle=True)
@@ -131,7 +132,7 @@ class DirectMNIST(AbstractBaseline):
                 optimizer.step()
             print("   train loss", np.mean(losses))
         self._model = model
-        return self
+        return time.time()-t0
 
     def _predict(self, x, context):
         self._model.eval()
@@ -153,10 +154,10 @@ class DirectNN(SklearnBaseline):
                          ('nn',
                           sklearn.neural_network.MLPRegressor(solver="lbfgs"))])
         direct_regression = GridSearchCV(pipe, param_grid=params, cv=5)
-
+        t0 = time.time()
         direct_regression.fit(x, y.flatten())
         self._model = direct_regression
-        return self
+        return time.time()-t0
 
     def _predict(self, x, context):
         return self._model.predict(self.augment(x, context)).reshape((-1, 1))
@@ -230,7 +231,9 @@ class DeepIV(AbstractBaseline):
                                       # Response model
                                       n_samples=1
                                       )
+        t0 = time.time()
         self._model.fit(y, x, context, z)
+        return time.time()-t0
 
     def _predict(self, x, context):
         if context is None:
@@ -252,13 +255,24 @@ class AGMM(AbstractBaseline):
                               l2_reg_weight_modeler=0.0,
                               dnn_layers=[1000, 1000, 1000], dnn_poly_degree=1,
                               log_summary=False, summary_dir='', random_seed=30)
+        t0 = time.time()
         self._model.fit(_z, _x, y)
+        return time.time()-t0
 
     def _predict(self, x, context):
         _x = self.augment(x, context)
 
         return self._model.predict(_x).reshape(-1, 1)
 
+
+def cv_remove_neg(cv_results):
+    cv = int(sum([1 for e in cv_results.keys() if 'split' in e]))
+    neg_pos = np.sum([cv_results['split{}_test_score'.format(i)]>=0 for i in range(cv)],axis=0).astype(int)
+    print(cv==neg_pos)
+    mean_test_score = (cv_results['mean_test_score'])[neg_pos==cv]
+    params = np.array(cv_results['params'])[neg_pos==cv]
+    print(len(params),len(neg_pos))
+    return params[np.argmin(mean_test_score)]
 
 class Poly2SLS(SklearnBaseline):
     def __init__(self, poly_degree=range(1, 4),
@@ -282,16 +296,20 @@ class Poly2SLS(SklearnBaseline):
         stage_1 = GridSearchCV(pipe, param_grid=params, cv=5)
         _z = self.augment(z, context)
         x_hat = stage_1.fit(_z, x)
-
+        #cv_results = stage_1.cv_results_
+        #stage_1.best_estimator_.set_params(**cv_remove_neg(cv_results))
         x_hat = stage_1.predict(_z)
-
+        print(stage_1.best_params_)
         pipe2 = Pipeline([('poly', PolynomialFeatures()),
                           ('ridge', Ridge())])
         stage_2 = GridSearchCV(pipe2, param_grid=params, cv=5)
+        t0 = time.time()
         stage_2.fit(self.augment(x_hat, context), y)
-
+        print(stage_2.best_params_)
+        #cv_results = stage_2.cv_results_
+        #stage_2.best_estimator_.set_params(**cv_remove_neg(cv_results))
         self._model = stage_2
-
+        return time.time()-t0
 
 class Vanilla2SLS(Poly2SLS):
     def display(self):
@@ -313,10 +331,11 @@ class Vanilla2SLS(Poly2SLS):
         x_hat = stage_1.predict(_z)
 
         stage_2 = LinearRegression()
+        t0 = time.time()
         stage_2.fit(self.augment(x_hat, context), y)
 
         self._model = stage_2
-
+        return time.time()-t0
 
 class GMMfromStatsmodels(AbstractBaseline):
     def _fit(self, x, y, z, context=None):
@@ -521,6 +540,7 @@ class GMM(AbstractBaseline):
             return loss
 
         batch_mode = "mini" if n_samples > 5000 else "full"
+        t0 = time.time()
         train = data_utils.DataLoader(data_utils.TensorDataset(x, y, z),
                                       batch_size=128, shuffle=True)
 
@@ -545,7 +565,7 @@ class GMM(AbstractBaseline):
                     print("g epoch %d / %d" % (epoch + 1, self._g_epochs))
                     self.fit_g_minibatch(train, loss)
             self._model = g_model
-        return self
+        return time.time()-t0
 
     def _predict(self, x, context):
         x = self.augment(x, context)
