@@ -4,7 +4,8 @@ import torch
 from scenarios.mnist_scenarios import MNISTScenarioZ, MNISTScenarioX, \
     MNISTScenarioXZ
 from scenarios.toy_scenarios import Standardizer
-
+import random
+random.seed(527)
 
 def create_dataset(scenario_class, dir):
     # set random seed
@@ -13,14 +14,14 @@ def create_dataset(scenario_class, dir):
     torch.manual_seed(seed)
 
     # set up model classes, objective, and data scenario
-    num_train = 20000
+    num_train = 10000
     num_dev = 10000
     num_test = 10000
     scenario = Standardizer(scenario_class(g_function="abs"))
 
     scenario.setup(num_train=num_train, num_dev=num_dev, num_test=num_test)
     scenario.info()
-    scenario.to_file(dir)
+    # scenario.to_file(dir)
 
 
 if __name__ == "__main__":

@@ -31,27 +31,27 @@ def dnn_regressor(x, n_outputs, degree, layers, drop_prob):
     for l_id in range(1, len(layers)):
         with tf.name_scope("Layer{}".format(l_id)):
             with tf.name_scope("Weights"):
-                weight_l = tf.Variable(tf.random_normal(
+                weight_l = tf.Variable(tf.random.normal(
                     [layers[l_id - 1], layers[l_id]], 0, 0.1), name="weights")
-                tf.summary.histogram('Weight Histogram', weight_l)
+                tf.compat.v1.summary.histogram('Weight Histogram', weight_l)
             with tf.name_scope("Bias"):
-                bias_l = tf.Variable(tf.random_normal(
+                bias_l = tf.Variable(tf.random.normal(
                     [layers[l_id]], 0, 0.1), name="biases")
-                tf.summary.histogram('Bias Histogram', bias_l)
+                tf.compat.v1.summary.histogram('Bias Histogram', bias_l)
             cur_out = tf.add(tf.matmul(cur_out, weight_l), bias_l)
-            cur_out = tf.nn.relu(tf.nn.dropout(cur_out, keep_prob=drop_prob))
+            cur_out = tf.nn.relu(tf.nn.dropout(cur_out, rate=1-drop_prob))
             weights.append(weight_l)
             biases.append(bias_l)
 
     # Final layer
     with tf.name_scope("OutLayer"):
         with tf.name_scope("Weights"):
-            weight_l = tf.Variable(tf.random_normal(
+            weight_l = tf.Variable(tf.random.normal(
                 [layers[-1], n_outputs], 0, 0.1))
-            tf.summary.histogram('Weight Histogram', weight_l)
+            tf.compat.v1.summary.histogram('Weight Histogram', weight_l)
         with tf.name_scope("bias"):
-            bias_l = tf.Variable(tf.random_normal([n_outputs], 0, 0.1))
-            tf.summary.histogram('Bias Histogram', bias_l)
+            bias_l = tf.Variable(tf.random.normal([n_outputs], 0, 0.1))
+            tf.compat.v1.summary.histogram('Bias Histogram', bias_l)
         cur_out = tf.add(tf.matmul(cur_out, weight_l), bias_l)
         weights.append(weight_l)
         biases.append(bias_l)
@@ -68,9 +68,9 @@ class Modeler:
                 P, num_outcomes, dnn_poly_degree, dnn_layers, drop_prob)
             self._optimizer = optimizer
             for w in self._weights:
-                tf.add_to_collection("ModelerModelVariables", w)
+                tf.compat.v1.add_to_collection("ModelerModelVariables", w)
             for b in self._biases:
-                tf.add_to_collection("ModelerModelVariables", b)
+                tf.compat.v1.add_to_collection("ModelerModelVariables", b)
 
     @property
     def output(self):
@@ -95,13 +95,13 @@ class GaussianCritic:
     def __init__(self, Z, optimizer, id=0, num_reduced_dims=2, center=None, precision=None, jitter=False, normalizer=None):
         with tf.name_scope("Critic_{}".format(id)):
             n_instruments = Z.get_shape().as_list()[1]
-            self._center = tf.Variable(tf.random_normal(
+            self._center = tf.Variable(tf.random.normal(
                 [n_instruments])) if center is None else tf.Variable(center, dtype=tf.float32, trainable=jitter)
-            self._precision = tf.Variable(tf.random_normal(
+            self._precision = tf.Variable(tf.random.normal(
                 [])) if precision is None else tf.Variable(precision, dtype=tf.float32, trainable=jitter)
-            tf.summary.scalar("Precision", self._precision)
-            [tf.summary.scalar("Center_{}".format(d), self._center[d]) for d in range(n_instruments)]
-            self._translation = tf.Variable(tf.random_normal([n_instruments, min(n_instruments, num_reduced_dims)], 0, 1))
+            tf.compat.v1.summary.scalar("Precision", self._precision)
+            [tf.compat.v1.summary.scalar("Center_{}".format(d), self._center[d]) for d in range(n_instruments)]
+            self._translation = tf.Variable(tf.random.normal([n_instruments, min(n_instruments, num_reduced_dims)], 0, 1))
             self._normalized_translation = tf.nn.l2_normalize(self._translation, 1, epsilon=1e-12)
             self._output = gaussian_kernel(
                 tf.matmul(Z - self._center, self._normalized_translation), precision=self._precision, normalizer=normalizer)
@@ -201,25 +201,25 @@ class GMMGameGraph:
     def _create_modeler(self):
         ''' Creates the modeler tf expression '''
         self._modeler = Modeler(self._P, self._num_outcomes, self._dnn_layers, self._dnn_poly_degree,
-                                self._drop_prob, tf.train.AdamOptimizer(learning_rate=self._learning_rate_modeler))
+                                self._drop_prob, tf.compat.v1.train.AdamOptimizer(learning_rate=self._learning_rate_modeler))
 
     def _create_critics(self, normalizers=None, leaf_list=None, center_grid=None, precision_grid=None):
         ''' Creates the tf expressions for each of the critics '''
         with tf.name_scope("MetaCritic"):
             if self._critic_type == 'Gaussian':
                 if precision_grid is None:
-                    self._critic_list = [GaussianCritic(self._Z, tf.train.AdamOptimizer(learning_rate=self._learning_rate_critics),
+                    self._critic_list = [GaussianCritic(self._Z, tf.compat.v1.train.AdamOptimizer(learning_rate=self._learning_rate_critics),
                                                 id=c_id, center=center, jitter=self._critics_jitter, normalizer=norm)
                                         for c_id, (center, norm) in enumerate(zip(center_grid, normalizers))]
                 else:
-                    self._critic_list = [GaussianCritic(self._Z, tf.train.AdamOptimizer(learning_rate=self._learning_rate_critics),
+                    self._critic_list = [GaussianCritic(self._Z, tf.compat.v1.train.AdamOptimizer(learning_rate=self._learning_rate_critics),
                                                 id=c_id, center=center, precision=precision, jitter=self._critics_jitter, normalizer=norm)
                                         for c_id, (center, precision, norm) in enumerate(zip(center_grid, precision_grid, normalizers))]
             if self._critic_type == 'Uniform':
-                self._critic_list = [BinCritic(self._Z, self._Leaf, leaf_id, tf.train.AdamOptimizer(learning_rate=self._learning_rate_critics), id=c_id, normalizer=norm) for c_id, (leaf_id, norm) in enumerate(zip(leaf_list, normalizers))]
+                self._critic_list = [BinCritic(self._Z, self._Leaf, leaf_id, tf.compat.v1.train.AdamOptimizer(learning_rate=self._learning_rate_critics), id=c_id, normalizer=norm) for c_id, (leaf_id, norm) in enumerate(zip(leaf_list, normalizers))]
             self._critic_weights = [tf.Variable(
                 1. / len(self._critic_list), dtype=tf.float32, trainable=False, name="Critic_{}_Weight".format(c_id)) for c_id in range(len(self._critic_list))]
-            [tf.summary.scalar("CriticWeights", cw)
+            [tf.compat.v1.summary.scalar("CriticWeights", cw)
              for cw in self._critic_weights]
 
     def _create_moment_list(self):
@@ -232,7 +232,7 @@ class GMMGameGraph:
                 for c_id, critic in enumerate(self._critic_list)]
             self._prev_moment_list = [tf.Variable(
                 0, dtype=tf.float32, trainable=False, name="PrevMoment_{}".format(c_id)) for c_id in range(len(self._critic_list))]
-            self._update_moments = [tf.assign(p, m) for p, m in zip(
+            self._update_moments = [tf.compat.v1.assign(p, m) for p, m in zip(
                 self._prev_moment_list, self._moment_list)]
 
     def _create_max_violation(self):
@@ -240,7 +240,7 @@ class GMMGameGraph:
         with tf.name_scope("MaxViolation"):
             self._max_violation = tf.reduce_max(
                 [tf.pow(m, 2) for m in self._moment_list], name="Max_Violation")
-            tf.summary.scalar("MaxViolation", self._max_violation)
+            tf.compat.v1.summary.scalar("MaxViolation", self._max_violation)
 
     def _create_gradient_step_modeler(self):
         ''' Creates the tf expression for the gradient of the modeler. '''
@@ -286,11 +286,11 @@ class GMMGameGraph:
                         critic.output - self._critic_list[it - 1].output), g_diff), v) for (g, v), (g_diff, vp) in zip(gvs_disc, gvs_disc_diff)]
                     apply_grads = critic.optimizer.apply_gradients(mult_gvs_disc)
                     with tf.control_dependencies([apply_grads]):
-                        clip_precision = tf.assign(critic.precision, tf.clip_by_value(
+                        clip_precision = tf.compat.v1.assign(critic.precision, tf.clip_by_value(
                             critic.precision, critic.precision_l, critic.precision_u))
-                        clip_center = tf.assign(critic.center, tf.clip_by_value(
+                        clip_center = tf.compat.v1.assign(critic.center, tf.clip_by_value(
                             critic.center, critic.center_l, critic.center_u))
-                        clip_weights = tf.assign(critic.weights, tf.clip_by_value(critic.weights, -10, 10))
+                        clip_weights = tf.compat.v1.assign(critic.weights, tf.clip_by_value(critic.weights, -10, 10))
                 apply_grads_critics.append(apply_grads)
                 apply_grads_critics.append(clip_precision)
                 apply_grads_critics.append(clip_center)
@@ -301,12 +301,12 @@ class GMMGameGraph:
     def _create_gradient_step_meta_critic(self):
         ''' Creates the tf expression for the Hedge update of the meta-critic '''
         with tf.name_scope("MetaCriticHedge"):
-            update_weights = [tf.assign(w, tf.scalar_mul(w, tf.exp(self._eta_hedge * tf.clip_by_value(tf.pow(m, 2), 0, self._loss_clip_hedge))))
+            update_weights = [tf.compat.v1.assign(w, tf.scalar_mul(w, tf.exp(self._eta_hedge * tf.clip_by_value(tf.pow(m, 2), 0, self._loss_clip_hedge))))
                               for w, m in zip(self._critic_weights, self._moment_list)]
             with tf.control_dependencies(update_weights):
                 l1_norm_weights = tf.add_n(self._critic_weights)
                 with tf.control_dependencies([l1_norm_weights]):
-                    normalize_weights = [tf.assign(w, tf.divide(
+                    normalize_weights = [tf.compat.v1.assign(w, tf.divide(
                         w, l1_norm_weights)) for w in self._critic_weights]
 
         self._gradient_step_meta_critic = update_weights + \

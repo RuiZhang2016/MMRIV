@@ -23,6 +23,7 @@ class FHistoryLearningEvalNoStop(AbstractLearningEval):
         y_dev_cpu = y_dev.cpu()
 
         for i in range(self.num_iter):
+            print(i,'eval')
             self.do_training_update(x_train, z_train, y_train, g, f,
                                     g_optimizer, f_optimizer, game_objective)
 
@@ -83,6 +84,7 @@ class FHistoryLearningEvalSGDNoStop(FHistoryLearningEvalNoStop):
         train_idx_iter = itertools.cycle(train_idx)
         # loop through training data
         for _ in range(num_batch):
+            print(_,'do_training_update')
             batch_idx = [next(train_idx_iter) for _ in range(self.batch_size)]
             x_batch = x_train[batch_idx]
             z_batch = z_train[batch_idx]

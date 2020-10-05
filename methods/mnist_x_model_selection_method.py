@@ -59,11 +59,11 @@ class MNISTXModelSelectionMethod(AbstractMethod):
         default_f_opt_factory = OptimizerFactory(
             Adam, lr=0.001, betas=(0.5, 0.9))
         g_simple_model_eval = SGDSimpleModelEval(
-            max_num_epoch=100, max_no_progress=10, batch_size=1024, eval_freq=1)
+            max_num_epoch=1, max_no_progress=10, batch_size=1024, eval_freq=1) # 100
         f_simple_model_eval = SGDSimpleModelEval(
-            max_num_epoch=100, max_no_progress=10, batch_size=1024, eval_freq=1)
+            max_num_epoch=1, max_no_progress=10, batch_size=1024, eval_freq=1) # 100
         learning_eval = FHistoryLearningEvalSGDNoStop(
-            num_epochs=60, eval_freq=1, batch_size=1024)
+            num_epochs=1, eval_freq=1, batch_size=1024)#60
         self.model_selection = FHistoryModelSelectionV3(
             g_model_list=g_models,
             f_model_list=f_models,

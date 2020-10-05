@@ -7,11 +7,11 @@ from methods.mnist_z_model_selection_method import MNISTZModelSelectionMethod
 from scenarios.abstract_scenario import AbstractScenario
 
 
-SCENARIOS_NAMES = ["mnist_x", "mnist_z", "mnist_xz"]
+SCENARIOS_NAMES = ["mnist_z","mnist_xz","mnist_x"]
 SCENARIO_METHOD_CLASSES = {
-    "mnist_x": MNISTXModelSelectionMethod,
     "mnist_z": MNISTZModelSelectionMethod,
     "mnist_xz": MNISTXZModelSelectionMethod,
+    "mnist_x": MNISTXModelSelectionMethod
 }
 
 RESULTS_FOLDER = "results/mnist/"
@@ -29,12 +29,11 @@ def run_experiment(scenario_name):
     scenario = AbstractScenario(filename="data/" + scenario_name + "/main.npz")
     scenario.info()
     scenario.to_tensor()
-    scenario.to_cuda()
 
     train = scenario.get_dataset("train")
     dev = scenario.get_dataset("dev")
     test = scenario.get_dataset("test")
-
+    return
     for rep in range(num_reps):
 
         method_class = SCENARIO_METHOD_CLASSES[scenario_name]

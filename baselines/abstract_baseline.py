@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class AbstractBaseline(object):
     def __init__(self):
         self._model = None
@@ -11,8 +10,8 @@ class AbstractBaseline(object):
         self._check_arguments(x, y, z, context)
         self._fitted_with_context = (context is not None)
         self._x_dim = x.shape[1]
-        self._fit(x, y, z, context)
-        return self
+        time = self._fit(x, y, z, context)
+        return self, time
 
     def _fit(self, x, y, z, context):
         raise NotImplementedError()

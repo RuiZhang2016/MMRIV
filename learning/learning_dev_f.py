@@ -9,7 +9,7 @@ import pandas
 from game_objectives.approximate_psi_objective import approx_psi_eval
 
 from learning.abstract_learning import AbstractLearning
-from plotting import PlotElement
+# from plotting import PlotElement
 from scenarios.abstract_scenario import AbstractScenario
 
 
@@ -162,14 +162,14 @@ class AbstractLearningDevF(AbstractLearning):
                 self.g = self.g.eval()
 
                 # plot f(z)
-                frame.add_plot(PlotElement(
-                    w_train_np, f_of_z_train.numpy(),
-                    "estimated f(z)", normalize=True))
+                # frame.add_plot(PlotElement(
+                #     w_train_np, f_of_z_train.numpy(),
+                #     "estimated f(z)", normalize=True))
 
                 # plot g(x)
                 g_of_x_plot = epsilon_train_history[-1] + y_train_cpu
-                frame.add_plot(PlotElement(w_train_np, g_of_x_plot.numpy(),
-                                           "fitted g(x)"))
+                # frame.add_plot(PlotElement(w_train_np, g_of_x_plot.numpy(),
+                #                            "fitted g(x)"))
 
                 self.f = self.f.train()
                 self.g = self.g.train()

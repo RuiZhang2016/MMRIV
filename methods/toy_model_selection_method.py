@@ -15,7 +15,7 @@ from model_selection.learning_eval_nostop import \
 from model_selection.simple_model_eval import GradientDecentSimpleModelEval, \
     SGDSimpleModelEval
 from models.mlp_model import MLPModel
-from optimizers import OAdam
+from optimizers.oadam import OAdam
 from optimizers.optimizer_factory import OptimizerFactory
 
 

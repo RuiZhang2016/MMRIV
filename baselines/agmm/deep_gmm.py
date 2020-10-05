@@ -177,11 +177,11 @@ class DeepGMM:
         if self._random_seed is not None:
             tf.set_random_seed(self._random_seed)
 
-        self.Z = tf.placeholder("float", [None, num_instruments], name="instrument")
-        self.P = tf.placeholder("float", [None, num_treatments], name="treatment")
-        self.Y = tf.placeholder("float", [None, num_outcomes], name="outcome")
-        self.Leaf = tf.placeholder("float", [None, cluster_labels.shape[1]], name="leaf_id")
-        self.drop_prob = tf.placeholder_with_default(
+        self.Z = tf.compat.v1.placeholder("float", [None, num_instruments], name="instrument")
+        self.P = tf.compat.v1.placeholder("float", [None, num_treatments], name="treatment")
+        self.Y = tf.compat.v1.placeholder("float", [None, num_outcomes], name="outcome")
+        self.Leaf = tf.compat.v1.placeholder("float", [None, cluster_labels.shape[1]], name="leaf_id")
+        self.drop_prob = tf.compat.v1.placeholder_with_default(
             1.0, shape=(), name="drop_prob")
 
         self.gmm_graph = GMMGameGraph(self.Z, self.P, self.Y, self.Leaf, self.drop_prob,
@@ -199,7 +199,7 @@ class DeepGMM:
             self.gmm_graph.create_graph(normalizers=normalizers, leaf_list=leaf_id_list)
 
         # Initialize the variables (i.e. assign their default value)
-        init = tf.global_variables_initializer()
+        init = tf.compat.v1.global_variables_initializer()
         if num_treatments == 1:
             self.avg_fn = []
             self.final_fn = []
@@ -211,7 +211,7 @@ class DeepGMM:
         #print(avg_store_steps)
         # Start training
         loss = np.inf
-        with tf.Session() as sess:
+        with tf.compat.v1.Session() as sess:
             if self._log_summary:
                 merged = tf.summary.merge_all()
                 writer = tf.summary.FileWriter(self._summary_dir, sess.graph)
@@ -369,8 +369,8 @@ class DeepGMM:
                 
 
         saver = tf.train.Saver(scope_variables("Modeler"))
-        init = tf.global_variables_initializer()
-        with tf.Session() as sess:
+        init = tf.compat.v1.global_variables_initializer()
+        with tf.compat.v1.Session() as sess:
             sess.run(init) 
             if model == 'avg':
                 output = []

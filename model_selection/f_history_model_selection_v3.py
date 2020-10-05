@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from game_objectives.approximate_psi_objective import max_approx_psi_eval
 from model_selection.learning_eval import f_history_g_eval
-
+import time
 
 class FHistoryModelSelectionV3(object):
     def __init__(self, g_model_list, f_model_list, learning_args_list,
@@ -25,7 +25,7 @@ class FHistoryModelSelectionV3(object):
         self.psi_eval_burn_in = psi_eval_burn_in
 
     def do_model_selection(self, x_train, z_train, y_train,
-                           x_dev, z_dev, y_dev, verbose=False):
+                           x_dev, z_dev, y_dev, model_id, verbose=False):
 
         # first run learning evaluation on each hyperparameter setup
         f_of_z_dev_list = []
@@ -34,6 +34,11 @@ class FHistoryModelSelectionV3(object):
             self.g_model_list, self.f_model_list, self.learning_args_list))
 
         for i, (g, f, learning_args) in enumerate(g_f_args_list):
+            if i == model_id:
+                pass
+            else:
+                continue
+            t0 = time.time()
             if verbose:
                 print("starting learning args eval %d" % i)
             g.initialize()
@@ -48,6 +53,9 @@ class FHistoryModelSelectionV3(object):
                 game_objective=game_objective)
             f_of_z_dev_list.extend(f_of_z_dev_list)
             e_dev_collections.append(e_dev_list)
+            print(time.time()-t0)
+        np.save()
+        return
 
         # now find best hyperparameter setup based on saved parameters
         best_learning_args = None

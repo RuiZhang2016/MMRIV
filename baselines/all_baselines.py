@@ -30,6 +30,7 @@ import statsmodels.sandbox.regression.gmm
 import statsmodels.tools.tools
 
 import os
+import time
 
 
 class SklearnBaseline(AbstractBaseline):
@@ -62,7 +63,7 @@ class SklearnBaseline(AbstractBaseline):
 class DirectLinearRegression(SklearnBaseline):
     def _fit(self, x, y, z, context=None):
         x = self.augment(x, context)
-        direct_regression = sklearn.linear_model.LinearRegression()
+        direc_regression = sklearn.linear_model.LinearRegression()
         direct_regression.fit(x, y)
         self._model = direct_regression
         return self
@@ -166,7 +167,7 @@ class DeepIV(AbstractBaseline):
     def __init__(self, treatment_model=None):
         if treatment_model is None:
             print("Using standard treatment model...")
-            self._treatment_model = lambda input_shape: keras.Sequential(
+            self._treatment_model = lambda input_shape: keras.models.Sequential(
                 [keras.layers.Dense(128,
                                     activation='relu',
                                     input_shape=input_shape),
@@ -184,7 +185,7 @@ class DeepIV(AbstractBaseline):
             else:
                 image_shape = (28, 28, 1)
 
-            self._treatment_model = lambda input_shape: keras.Sequential([
+            self._treatment_model = lambda input_shape: keras.models.Sequential([
                 keras.layers.Reshape(image_shape, input_shape=input_shape),
                 keras.layers.Conv2D(16, kernel_size=(3, 3),
                                     activation='relu'),
@@ -205,7 +206,7 @@ class DeepIV(AbstractBaseline):
 
         treatment_model = self._treatment_model((context_dim + z_dim,))
 
-        response_model = keras.Sequential([keras.layers.Dense(128,
+        response_model = keras.models.Sequential([keras.layers.Dense(128,
                                                               activation='relu',
                                                               input_shape=(
                                                                   context_dim + x_dim,)),
@@ -230,7 +231,9 @@ class DeepIV(AbstractBaseline):
                                       # Response model
                                       n_samples=1
                                       )
+        t0 = time.time()
         self._model.fit(y, x, context, z)
+        return time.time()-t0
 
     def _predict(self, x, context):
         if context is None:
@@ -252,7 +255,9 @@ class AGMM(AbstractBaseline):
                               l2_reg_weight_modeler=0.0,
                               dnn_layers=[1000, 1000, 1000], dnn_poly_degree=1,
                               log_summary=False, summary_dir='', random_seed=30)
+        t0 = time.time()
         self._model.fit(_z, _x, y)
+        return time.time()-t0
 
     def _predict(self, x, context):
         _x = self.augment(x, context)

@@ -94,6 +94,7 @@ class OptimalMomentObjective(AbstractObjective):
         return "OptimalObjective::lambda_1=%f" % self._lambda_1
 
     def calc_objective(self, g, f, x, z, y):
+
         g_of_x = torch.squeeze(g(x))
         f_of_z = torch.squeeze(f(z))
         y = torch.squeeze(y)
