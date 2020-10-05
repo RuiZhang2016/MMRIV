@@ -1,0 +1,156 @@
+       10000           1
+
+       10000           1
+
+       10000           8
+
+       10000           1
+
+       10000           1
+
+Elapsed time is 122.288093 seconds.
+
+<a href = "matlab: helpview('optim','local_min_unconstrained','CSHelpWindow');">Local minimum found</a>.
+
+Optimization completed because the <a href = "matlab: helpview('optim','grad_size','CSHelpWindow');">size of the gradient</a> is less than
+the value of the <a href = "matlab: helpview('optim','optimality_tolerance_unc','CSHelpWindow');">optimality tolerance</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit1basic'},{'optim:fminusub:Exit1detailed','9.817774e-08','1.000000e-06'},true,true);;">stopping criteria details</a>>
+
+<a href = "matlab: helpview('optim','local_min_unconstrained','CSHelpWindow');">Local minimum found</a>.
+
+Optimization completed because the <a href = "matlab: helpview('optim','grad_size','CSHelpWindow');">size of the gradient</a> is less than
+the value of the <a href = "matlab: helpview('optim','optimality_tolerance_unc','CSHelpWindow');">optimality tolerance</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit1basic'},{'optim:fminusub:Exit1detailed','1.073754e-07','1.000000e-06'},true,true);;">stopping criteria details</a>>
+Elapsed time is 14.202740 seconds.
+mendelian_8_1_0.5
+  Columns 1 through 9
+
+    0.0903         0         0         0         0         0         0         0         0
+
+  Column 10
+
+         0
+
+    0.0090
+
+    0.0286
+
+       10000           1
+
+       10000           1
+
+       10000           8
+
+       10000           1
+
+       10000           1
+
+Elapsed time is 106.455365 seconds.
+
+<a href = "matlab: helpview('optim','local_min_unconstrained','CSHelpWindow');">Local minimum found</a>.
+
+Optimization completed because the <a href = "matlab: helpview('optim','grad_size','CSHelpWindow');">size of the gradient</a> is less than
+the value of the <a href = "matlab: helpview('optim','optimality_tolerance_unc','CSHelpWindow');">optimality tolerance</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit1basic'},{'optim:fminusub:Exit1detailed','3.134443e-08','1.000000e-06'},true,true);;">stopping criteria details</a>>
+
+<a href = "matlab: helpview('optim','local_min_unconstrained','CSHelpWindow');">Local minimum found</a>.
+
+Optimization completed because the <a href = "matlab: helpview('optim','grad_size','CSHelpWindow');">size of the gradient</a> is less than
+the value of the <a href = "matlab: helpview('optim','optimality_tolerance_unc','CSHelpWindow');">optimality tolerance</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit1basic'},{'optim:fminusub:Exit1detailed','2.243700e-08','1.000000e-06'},true,true);;">stopping criteria details</a>>
+Elapsed time is 12.843023 seconds.
+mendelian_8_0.5_1
+  Columns 1 through 9
+
+    0.0362         0         0         0         0         0         0         0         0
+
+  Column 10
+
+         0
+
+    0.0036
+
+    0.0114
+
+       10000           1
+
+       10000           1
+
+       10000          16
+
+       10000           1
+
+       10000           1
+
+Elapsed time is 129.549589 seconds.
+
+<a href = "matlab: helpview('optim','local_min_unconstrained','CSHelpWindow');">Local minimum found</a>.
+
+Optimization completed because the <a href = "matlab: helpview('optim','grad_size','CSHelpWindow');">size of the gradient</a> is less than
+the value of the <a href = "matlab: helpview('optim','optimality_tolerance_unc','CSHelpWindow');">optimality tolerance</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit1basic'},{'optim:fminusub:Exit1detailed','4.883024e-08','1.000000e-06'},true,true);;">stopping criteria details</a>>
+
+<a href = "matlab: helpview('optim','local_min_possible','CSHelpWindow');">Local minimum possible</a>.
+
+fminunc stopped because it cannot decrease the objective function
+along the current <a href = "matlab: helpview('optim','search_direction','CSHelpWindow');">search direction</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit5basic','fminunc'},{'optim:fminusub:Exit5detailed'},true,true);;">stopping criteria details</a>>
+Elapsed time is 14.007984 seconds.
+mendelian_16_1_0.5
+  Columns 1 through 9
+
+    0.0835         0         0         0         0         0         0         0         0
+
+  Column 10
+
+         0
+
+    0.0084
+
+    0.0264
+
+       10000           1
+
+       10000           1
+
+       10000          16
+
+       10000           1
+
+       10000           1
+
+Elapsed time is 133.304796 seconds.
+
+<a href = "matlab: helpview('optim','local_min_unconstrained','CSHelpWindow');">Local minimum found</a>.
+
+Optimization completed because the <a href = "matlab: helpview('optim','grad_size','CSHelpWindow');">size of the gradient</a> is less than
+the value of the <a href = "matlab: helpview('optim','optimality_tolerance_unc','CSHelpWindow');">optimality tolerance</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit1basic'},{'optim:fminusub:Exit1detailed','5.110371e-08','1.000000e-06'},true,true);;">stopping criteria details</a>>
+
+<a href = "matlab: helpview('optim','local_min_unconstrained','CSHelpWindow');">Local minimum found</a>.
+
+Optimization completed because the <a href = "matlab: helpview('optim','grad_size','CSHelpWindow');">size of the gradient</a> is less than
+the value of the <a href = "matlab: helpview('optim','optimality_tolerance_unc','CSHelpWindow');">optimality tolerance</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit1basic'},{'optim:fminusub:Exit1detailed','4.269768e-09','1.000000e-06'},true,true);;">stopping criteria details</a>>
+Elapsed time is 13.061800 seconds.
+mendelian_16_0.5_1
+  Columns 1 through 9
+
+    0.0279         0         0         0         0         0         0         0         0
+
+  Column 10
+
+         0
+
+    0.0028
+
+    0.0088
+
