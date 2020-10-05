@@ -142,7 +142,6 @@ class AbstractMNISTScenario(AbstractScenario):
             z = self._sample_images(z_digits, images, labels).reshape(-1, 1, 28, 28)
         else:
             z = toy_z
-	
         return x, z, toy_y, g, w
 
     def true_g_function(self, x):

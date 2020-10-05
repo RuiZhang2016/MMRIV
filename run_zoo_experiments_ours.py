@@ -42,7 +42,6 @@ def run_experiment(scenario_name, repid, datasize):
 
 def main():
     for scenario in ["step", "sin", "abs", "linear"]:
-
         run_experiment(scenario)
     # run_experiment("linear")
 
@@ -78,3 +77,7 @@ if __name__ == "__main__":
         rows = ["{:.3f} $pm$ {:.3f}".format(mean[i],std[i]) for i in range(len(mean))]
         print(tabulate(np.vstack((scenarios,rows)), headers='firstrow',tablefmt='latex'))
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> d29ec8fd2425f4e64ac35e5efd32dd0cd13d8058
