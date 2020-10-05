@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="9df8aec2-db87-454f-a4af-8762f162770e" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mendelian_randomization_simulation.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/our_methods/nn_for_mnist.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baselines/abstract_baseline.py" beforeDir="false" afterPath="$PROJECT_DIR$/baselines/abstract_baseline.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baselines/agmm/deep_gmm.py" beforeDir="false" afterPath="$PROJECT_DIR$/baselines/agmm/deep_gmm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baselines/agmm/gmm_game_graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/baselines/agmm/gmm_game_graph.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baselines/all_baselines.py" beforeDir="false" afterPath="$PROJECT_DIR$/baselines/all_baselines.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game_objectives/simple_moment_objective.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_objectives/simple_moment_objective.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generate_mnist_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/generate_mnist_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generate_zoo_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/generate_zoo_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/learning/learning_dev_f.py" beforeDir="false" afterPath="$PROJECT_DIR$/learning/learning_dev_f.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/methods/mnist_x_model_selection_method.py" beforeDir="false" afterPath="$PROJECT_DIR$/methods/mnist_x_model_selection_method.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/methods/mnist_xz_model_selection_method.py" beforeDir="false" afterPath="$PROJECT_DIR$/methods/mnist_xz_model_selection_method.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/methods/toy_model_selection_method.py" beforeDir="false" afterPath="$PROJECT_DIR$/methods/toy_model_selection_method.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_selection/f_history_model_selection_v3.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_selection/f_history_model_selection_v3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_selection/learning_eval_nostop.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_selection/learning_eval_nostop.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run_mnist_experiments_ours.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_mnist_experiments_ours.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run_zoo_experiments_baselines.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_zoo_experiments_baselines.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run_zoo_experiments_ours.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_zoo_experiments_ours.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scenarios/mnist_scenarios.py" beforeDir="false" afterPath="$PROJECT_DIR$/scenarios/mnist_scenarios.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scenarios/toy_scenarios.py" beforeDir="false" afterPath="$PROJECT_DIR$/scenarios/toy_scenarios.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JupyterTrust" id="7b2943fd-7bda-4ea5-b51b-a4fae1a49d27" />
+  <component name="ProjectId" id="1gdSTUDgTBOKxtJBLzLR9XlJcGA" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/our_method" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.mendelian_randomization_simulation">
+    <configuration name="generate_mnist_data" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="DeepGMM" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/generate_mnist_data.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="mendelian_randomization_simulation" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="DeepGMM" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mendelian_randomization_simulation.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="mnist_scenarios" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="DeepGMM" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/scenarios" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scenarios/mnist_scenarios.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytorch_mnist" type="PythonConfigurationType" factoryName="Python">
+      <module name="DeepGMM" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/bin/python3.6" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/our_methods" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/our_methods/pytorch_mnist.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="run_mnist_experiments_baselines" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="DeepGMM" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/run_mnist_experiments_baselines.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="toy_scenarios" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="DeepGMM" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/scenarios" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scenarios/toy_scenarios.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.pytorch_mnist" />
+      <item itemvalue="Python.generate_mnist_data" />
+      <item itemvalue="Python.mnist_scenarios" />
+      <item itemvalue="Python.run_mnist_experiments_baselines" />
+      <item itemvalue="Python.mendelian_randomization_simulation" />
+      <item itemvalue="Python.toy_scenarios" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.mendelian_randomization_simulation" />
+        <item itemvalue="Python.toy_scenarios" />
+        <item itemvalue="Python.generate_mnist_data" />
+        <item itemvalue="Python.mnist_scenarios" />
+        <item itemvalue="Python.run_mnist_experiments_baselines" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9df8aec2-db87-454f-a4af-8762f162770e" name="Default" comment="" />
+      <created>1589048593246</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1589048593246</updated>
+      <workItem from="1598442990208" duration="215000" />
+      <workItem from="1598447520661" duration="16302000" />
+      <workItem from="1598894252891" duration="18235000" />
+      <workItem from="1599472324092" duration="3862000" />
+      <workItem from="1599553653639" duration="5694000" />
+      <workItem from="1599685451210" duration="2580000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="py_test_in_pytorch_mnist_py - 2020.08.06 at 13h 55m 59s.xml">
+      <configuration name="py.test in pytorch_mnist.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="py_test_in_pytorch_mnist_py - 2020.08.06 at 14h 04m 44s.xml">
+      <configuration name="py.test in pytorch_mnist.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="py_test_in_pytorch_mnist_py - 2020.08.06 at 14h 05m 44s.xml">
+      <configuration name="py.test in pytorch_mnist.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="py_test_in_pytorch_mnist_py - 2020.08.06 at 14h 06m 39s.xml">
+      <configuration name="py.test in pytorch_mnist.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="py_test_in_pytorch_mnist_py - 2020.08.06 at 14h 07m 06s.xml">
+      <configuration name="py.test in pytorch_mnist.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytorch_mnist_py - 2020.08.06 at 14h 34m 37s.xml">
+      <configuration name="pytorch_mnist.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytorch_mnist_py - 2020.08.06 at 14h 35m 13s.xml">
+      <configuration name="pytorch_mnist.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytorch_mnist_py - 2020.08.06 at 14h 36m 34s.xml">
+      <configuration name="pytorch_mnist.py" configurationId="tests" />
+    </history-entry>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="411" y="259" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1599518060897">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="411" y="259" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1440.900@0.0.1440.900" timestamp="1599518060897" />
+    <state width="1398" height="19" key="GridCell.Tab.0.bottom" timestamp="1600188262982">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="19" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1600188262982" />
+    <state width="2518" height="375" key="GridCell.Tab.0.bottom/0.0.2560.1440@0.0.2560.1440" timestamp="1599661047541" />
+    <state width="1398" height="19" key="GridCell.Tab.0.center" timestamp="1600188262981">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="19" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1600188262981" />
+    <state width="2518" height="375" key="GridCell.Tab.0.center/0.0.2560.1440@0.0.2560.1440" timestamp="1599661047539" />
+    <state width="1398" height="19" key="GridCell.Tab.0.left" timestamp="1600188262980">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="19" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1600188262980" />
+    <state width="2518" height="375" key="GridCell.Tab.0.left/0.0.2560.1440@0.0.2560.1440" timestamp="1599661047538" />
+    <state width="1398" height="19" key="GridCell.Tab.0.right" timestamp="1600188262981">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="19" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1600188262981" />
+    <state width="2518" height="375" key="GridCell.Tab.0.right/0.0.2560.1440@0.0.2560.1440" timestamp="1599661047540" />
+    <state x="781" y="359" key="SettingsEditor" timestamp="1598625083501">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="781" y="359" key="SettingsEditor/0.0.2560.1440@0.0.2560.1440" timestamp="1598625083501" />
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1599518058682">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1599518058682" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/DeepGMM$generate_zoo_data.coverage" NAME="generate_zoo_data Coverage Results" MODIFIED="1598598040844" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DeepGMM$mnist_x_model_selection_method.coverage" NAME="mnist_x_model_selection_method Coverage Results" MODIFIED="1598452886418" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/methods" />
+    <SUITE FILE_PATH="coverage/DeepGMM$generate_mnist_data.coverage" NAME="generate_mnist_data Coverage Results" MODIFIED="1599209441945" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DeepGMM$mnist_scenarios.coverage" NAME="mnist_scenarios Coverage Results" MODIFIED="1599207158932" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scenarios" />
+    <SUITE FILE_PATH="coverage/DeepGMM$mendelian_randomization_simulation.coverage" NAME="mendelian_randomization_simulation Coverage Results" MODIFIED="1599685558894" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DeepGMM$run_zoo_experiments_baselines.coverage" NAME="run_zoo_experiments_baselines Coverage Results" MODIFIED="1598616490627" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DeepGMM$run_mnist_experiments_ours.coverage" NAME="run_mnist_experiments_ours Coverage Results" MODIFIED="1598599139684" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DeepGMM$toy_scenarios.coverage" NAME="toy_scenarios Coverage Results" MODIFIED="1599559083165" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scenarios" />
+    <SUITE FILE_PATH="coverage/DeepGMM$run_mnist_experiments_baselines.coverage" NAME="run_mnist_experiments_baselines Coverage Results" MODIFIED="1598950759410" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

@@ -7,7 +7,6 @@ from scenarios.toy_scenarios import Standardizer
 import random
 random.seed(527)
 
-
 def create_dataset(scenario_class, dir):
     # set random seed
     seed = 527

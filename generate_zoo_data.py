@@ -18,7 +18,6 @@ def create_dataset(function_name='step', dir="data/zoo/"):
     scenario.setup(num_train=num_train, num_dev=num_dev, num_test=num_test)
     scenario.to_file(dir + function_name)
 
-
 if __name__ == "__main__":
     for function in ['linear', 'abs', 'sin', 'step']:
         create_dataset(function)

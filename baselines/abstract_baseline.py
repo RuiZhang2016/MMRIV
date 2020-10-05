@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class AbstractBaseline(object):
     def __init__(self):
         self._model = None

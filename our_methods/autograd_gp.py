@@ -18,7 +18,6 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 ROOT_PATH = os.path.split(os.getcwd())[0]
 
-
 def make_gp_funs(cov_func, num_cov_params):
     """Functions that perform Gaussian process regression.
        cov_func has signature (cov_params, x, x')"""

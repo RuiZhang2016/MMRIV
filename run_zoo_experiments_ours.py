@@ -26,7 +26,6 @@ def run_experiment(scenario_name, repid, datasize):
         time = method.fit(train.x, train.z, train.y, dev.x, dev.z, dev.y,
                    g_dev=dev.g, verbose=True)
         np.save(folder+"Ours_%d_%d_time.npy" %(rep,train.x.shape[0]),time)
-        return
         g_pred_test =  method.predict(test.x)
         mse =  float(((g_pred_test - test.g) ** 2).mean())
 
@@ -43,6 +42,7 @@ def run_experiment(scenario_name, repid, datasize):
 
 def main():
     for scenario in ["step", "sin", "abs", "linear"]:
+
         run_experiment(scenario)
     # run_experiment("linear")
 
@@ -77,5 +77,4 @@ if __name__ == "__main__":
         std = np.std(means,axis=1)
         rows = ["{:.3f} $pm$ {:.3f}".format(mean[i],std[i]) for i in range(len(mean))]
         print(tabulate(np.vstack((scenarios,rows)), headers='firstrow',tablefmt='latex'))
-
 

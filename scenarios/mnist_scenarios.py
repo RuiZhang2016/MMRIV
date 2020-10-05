@@ -125,8 +125,7 @@ class AbstractMNISTScenario(AbstractScenario):
         # return x, z, y, g, w
 
         toy_x, toy_z, toy_y, toy_g, _ = self.toy_scenario.generate_data(num_data)
-        print(toy_x)
-        if self.use_x_images:
+	if self.use_x_images:
             x_digits = np.clip(1.5*toy_x[:, 0] + 5.0, 0, 9).round()
             x = self._sample_images(x_digits, images, labels).reshape(-1, 1, 28, 28)
             # g = self._g_step_function(x_digits).reshape(-1, 1)
@@ -143,7 +142,7 @@ class AbstractMNISTScenario(AbstractScenario):
             z = self._sample_images(z_digits, images, labels).reshape(-1, 1, 28, 28)
         else:
             z = toy_z
-
+	
         return x, z, toy_y, g, w
 
     def true_g_function(self, x):
