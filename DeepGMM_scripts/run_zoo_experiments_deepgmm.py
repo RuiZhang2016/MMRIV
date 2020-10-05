@@ -25,8 +25,8 @@ def run_experiment(scenario_name, repid, datasize):
         method = ToyModelSelectionMethod(enable_cuda=torch.cuda.is_available())
         time = method.fit(train.x, train.z, train.y, dev.x, dev.z, dev.y,
                    g_dev=dev.g, verbose=True)
-        np.save(folder+"Ours_%d_%d_time.npy" %(rep,train.x.shape[0]),time)
-        return
+        np.save(folder+"deepgmm_%d_%d_time.npy" %(rep,train.x.shape[0]),time)
+
         g_pred_test =  method.predict(test.x)
         mse =  float(((g_pred_test - test.g) ** 2).mean())
 
@@ -43,12 +43,12 @@ def run_experiment(scenario_name, repid, datasize):
 
 if __name__ == "__main__":
     scenarios = np.array(["abs", "linear", "sin", "step"])
-    if len(sys.argv)==3:
-        ind = int(sys.argv[1])
-        datasize = int(sys.argv[2])
-        sid, repid = divmod(ind,10)
-        run_experiment(scenarios[sid],repid,datasize)
-    else: 
+
+    for datasize in [200,2000]:
+        for sid in range(4):
+            for repid in range(10):
+                run_experiment(scenarios[sid],repid,datasize)
+
         means = []
         times = []
         for scenario_name in scenarios:
@@ -56,11 +56,10 @@ if __name__ == "__main__":
             means2 = []
             times2 = []
             for rep in range(10):
-                print(rep)
-                save_path = folder+"Ours_%d_%d.npz" % (rep,datasize)
+                save_path = folder+"deepgmm_%d_%d.npz" % (rep,datasize)
                 res = np.load(save_path)
                 means2 +=  [np.mean((res['g_hat']-res['g_true'])**2)]
-                time_path = folder+"Ours_%d_%d_time.npy" % (rep,datasize)
+                time_path = folder+"deepgmm_%d_%d_time.npy" % (rep,datasize)
                 res = np.load(time_path)
                 times2 += [res]
             means += [means2]

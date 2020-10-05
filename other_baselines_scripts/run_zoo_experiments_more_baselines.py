@@ -95,23 +95,27 @@ def run_experiment(scenario_name,mid,repid,datasize, num_reps=10, seed=527,train
 
 if __name__ == "__main__":
     scenarios = np.array(["abs", "linear", "sin", "step"])
-    datasize = int(sys.argv[2])
+    # datasize = int(sys.argv[2])
     # ind = int(sys.argv[1])
     # sid, ind = divmod(ind,60)
     # mid, repid = divmod(ind,10)
-    # run_experiment(scenarios[sid],mid,repid,datasize, training=True)
-    # assert 1==0
-    rows = []
-    for s in scenarios:
-        means,times = run_experiment(s,0,0,datasize,training=False)
-        mean = np.mean(means,axis=0)
-        std = np.std(means,axis=0)
-        rows += [["{:.3f} $pm$ {:.3f}".format(mean[i],std[i]) for i in range(len(mean))]]
-        print('time: ',np.mean(times,axis=0),np.std(times,axis=0))
+    for datasize in [200,2000]:
+        for sid in range(4):
+            for mid in range(6):
+                for repid in range(10):
+                    run_experiment(scenarios[sid],mid,repid,datasize, training=True)
 
-    methods = np.array(["DirectNN","Vanilla2SLS","Poly2SLS","GMM","AGMM","DeepIV"])[:,None]
-    print(methods,np.array(rows).T)
-    rows = np.hstack((methods,np.array(rows).T))
-    print('Tabulate Table:')
-    print(tabulate(np.vstack((np.append([""],scenarios),rows)), headers='firstrow',tablefmt='latex'))
+        rows = []
+        for s in scenarios:
+            means,times = run_experiment(s,0,0,datasize,training=False)
+            mean = np.mean(means,axis=0)
+            std = np.std(means,axis=0)
+            rows += [["{:.3f} $pm$ {:.3f}".format(mean[i],std[i]) for i in range(len(mean))]]
+            print('time: ',np.mean(times,axis=0),np.std(times,axis=0))
+
+        methods = np.array(["DirectNN","Vanilla2SLS","Poly2SLS","GMM","AGMM","DeepIV"])[:,None]
+        print(methods,np.array(rows).T)
+        rows = np.hstack((methods,np.array(rows).T))
+        print('Tabulate Table:')
+        print(tabulate(np.vstack((np.append([""],scenarios),rows)), headers='firstrow',tablefmt='latex'))
 

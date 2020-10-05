@@ -94,29 +94,28 @@ def run_experiment(scenario_name,mid,repid, num_reps=10, seed=527,training=False
 
 
 if __name__ == "__main__":
-    scenarios = np.array(["mendelian_{}_{}_{}".format(s,i,j) for s in [8,16,32] for i,j in [[1,1]]])
-            # [[1,1],[1,2],[2,1]]])
-    print(scenarios)
-    if len(sys.argv)>1:
-        ind = int(sys.argv[1])
-        sid, ind = divmod(ind,60)
-        mid, repid = divmod(ind,10)
-        run_experiment(scenarios[sid],mid,repid, training=True)
-    elif len(sys.argv) == 1:
-        rows = []
-        scenarios = np.array(["mendelian_{}_{}_{}".format(s,i,j) for s in [16] for i,j in [[1,0.5],[1,1],[1,2]]]) 
-        for i in range(len(scenarios)):
-            s = scenarios[i]
-            means,times = run_experiment(s,0,0,training=False)
-            mean = np.mean(means,axis=0)
-            std = np.std(means,axis=0)
-            rows += [["({},{:.4f}) +- ({:.3f},{:.3f})".format(s.split('_')[-2],mean[j],std[j],std[j]) for j in range(len(mean))]]
-            print('time: ',np.mean(times,axis=0),np.std(times,axis=0))
+    scenarios = ["mendelian_{}_{}_{}".format(s, i, j) for s in [8,16,32] for i,j in [[1,1]]]
+    scenarios += ["mendelian_{}_{}_{}".format(16, i, j) for i, j in [[1, 0.5],[1, 2]]]
+    scenarios += ["mendelian_{}_{}_{}".format(16, i, j)for i, j in [[0.5, 1],[2, 1]]]
 
-        # methods = np.array(["DirectNN","Vanilla2SLS","Poly2SLS","GMM","AGMM","DeepIV"])[:,None]
-        rows = np.array(rows)
-        #rows = np.vstack((methods,rows))
-        print('addplot+[mark=*,error bars/.cd, y dir=both,y explicit] coordinates'.join(['{'+'\n'.join(e)+'};\n' for e in rows.T]))
-        print('Tabulate Table:')
-        # print(tabulate(np.vstack((np.append([""],scenarios),rows)), headers='firstrow',tablefmt='latex'))
+    for sce in scenarios:
+        for mid in range(6):
+            for repid in range(10):
+                run_experiment(sce, mid, repid, training=True)
+
+    rows = []
+    for i in range(len(scenarios)):
+        s = scenarios[i]
+        means,times = run_experiment(s,0,0,training=False)
+        mean = np.mean(means,axis=0)
+        std = np.std(means,axis=0)
+        rows += [["({},{:.4f}) +- ({:.3f},{:.3f})".format(s,mean[j],std[j],std[j]) for j in range(len(mean))]]
+        print('time: ',np.mean(times,axis=0),np.std(times,axis=0))
+
+    # methods = np.array(["DirectNN","Vanilla2SLS","Poly2SLS","GMM","AGMM","DeepIV"])[:,None]
+    rows = np.array(rows)
+    #rows = np.vstack((methods,rows))
+    print('addplot+[mark=*,error bars/.cd, y dir=both,y explicit] coordinates'.join(['{'+'\n'.join(e)+'};\n' for e in rows.T]))
+    print('Tabulate Table:')
+    # print(tabulate(np.vstack((np.append([""],scenarios),rows)), headers='firstrow',tablefmt='latex'))
 

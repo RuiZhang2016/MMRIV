@@ -54,14 +54,14 @@ def run_experiment(scenario_name,repid,model_id,training=False):
             print("")
             print("saving results...")
             folder = ROOT_PATH+"/results/mnist/" + scenario_name + "/"
-            file_name = "Ours_%d.npz" % rep
+            file_name = "deepgmm_%d.npz" % rep
             save_path = os.path.join(folder, file_name)
             os.makedirs(folder, exist_ok=True)
             np.savez(save_path, x=test.w, y=test.y, g_true=test.g,
                      g_hat=g_pred_test.detach())
         else:
             folder = ROOT_PATH+"/results/mnist/" + scenario_name + "/"
-            file_name = "Ours_%d.npz" % rep
+            file_name = "deepgmm_%d.npz" % rep
             save_path = os.path.join(folder, file_name)
             if os.path.exists(save_path):
                 res = np.load(save_path)
@@ -76,18 +76,13 @@ def main():
 
 
 if __name__ == "__main__":
-    if len(sys.argv)>1:
-        ind = int(sys.argv[1])
-        sid, ind = divmod(ind,10)
-        model_id, repid = divmod(ind,10)
-        model_id = -1
-        # sid, repid = divmod(ind,10)
-        run_experiment(SCENARIOS_NAMES[sid], repid,model_id, training=True)
-        # Parallel(n_jobs=20)(delayed(run_experiment)(SCENARIOS_NAMES[sid], repid, 3,training=True)  for sid in range(3) for repid in range(10))
-    else:
-        for s in SCENARIOS_NAMES:
-            means = run_experiment(s, 0, 3, training=False)
-            print(means)
-            mean = np.mean(means)
-            std = np.std(means)
-            print("{} {:.3f} $pm$ {:.3f}".format(s, mean,std))
+    for sid in range(3):
+        for repid in range(10):
+            run_experiment(SCENARIOS_NAMES[sid], repid,-1, training=True)
+
+    for s in SCENARIOS_NAMES:
+        means = run_experiment(s, 0, 3, training=False)
+        print(means)
+        mean = np.mean(means)
+        std = np.std(means)
+        print("{} {:.3f} $pm$ {:.3f}".format(s, mean,std))

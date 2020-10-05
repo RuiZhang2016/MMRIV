@@ -97,30 +97,22 @@ def run_experiment(scenario_name, mid, repid, num_reps=10, seed=527,training=Fal
     # mean = np.mean(means,axis=0)
     # std = np.std(means,axis=0)
 
-def main():
-    scenarios = ["mnist_z", "mnist_x", "mnist_xz"]
-    # scenarios = ["mnist_xz"]
-    for scenario in scenarios:
-        print("\nLoading " + scenario + "...")
-        run_experiment(scenario)
-
 
 if __name__ == "__main__":
     scenarios = np.array(["mnist_z", "mnist_x", "mnist_xz"])
-    if len(sys.argv) > 1:
-        ind = int(sys.argv[1])
-        sid, ind = divmod(ind,50)
-        mid, repid = divmod(ind,10)
-        run_experiment(scenarios[sid], mid, repid, num_reps=10, seed=527,training=True)
-    elif len(sys.argv) == 1:
-        rows = []
-        for s in scenarios:
-            print(s)
-            means = run_experiment(s, 0, 0, training=False)
-            mean = np.mean(means,axis=0)
-            std = np.std(means,axis=0)
-            rows += [["{:.3f} $pm$ {:.3f}".format(mean[i],std[i]) for i in range(len(mean))]]
+    for sid in range(3):
+        for mid in range(5):
+            for repid in range(10):
+                run_experiment(scenarios[sid], mid, repid, num_reps=10, seed=527,training=True)
 
-        methods = np.array(["DirectNN","Vanilla2SLS","Ridge2SLS","GMM+NN","DeepIV"])[:,None]
-        rows = np.hstack((methods,np.array(rows).T))
-        print(tabulate(np.vstack((np.append([""],scenarios),rows)), headers='firstrow',tablefmt='latex'))
+    rows = []
+    for s in scenarios:
+        print(s)
+        means = run_experiment(s, 0, 0, training=False)
+        mean = np.mean(means,axis=0)
+        std = np.std(means,axis=0)
+        rows += [["{:.3f} $pm$ {:.3f}".format(mean[i],std[i]) for i in range(len(mean))]]
+
+    methods = np.array(["DirectNN","Vanilla2SLS","Ridge2SLS","GMM+NN","DeepIV"])[:,None]
+    rows = np.hstack((methods,np.array(rows).T))
+    print(tabulate(np.vstack((np.append([""],scenarios),rows)), headers='firstrow',tablefmt='latex'))

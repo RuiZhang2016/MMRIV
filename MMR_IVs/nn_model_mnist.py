@@ -208,14 +208,16 @@ def run_experiment_nn(sname,datasize,indices=[],seed=527,training=True):
 
 if __name__ == '__main__': 
     scenarios = ['mnist_z','mnist_x','mnist_xz']#['mnist_z','mnist_x','mnist_xz'] # ["step", "sin", "abs", "linear"]
-    if len(sys.argv) == 3:
-        index = int(sys.argv[1])
-        datasize = int(sys.argv[2])
-        sid,index = divmod(index,21)
-        lr_id, dw_id = divmod(index,7)
-        run_experiment_nn(scenarios[sid],datasize, [lr_id,dw_id])
-    else:
-        datasize = 10000
-        for s in scenarios:
-            print(s)
-            run_experiment_nn(s,datasize,[1, 0],training=False)
+
+        # index = int(sys.argv[1])
+        # datasize = int(sys.argv[2])
+        # sid,index = divmod(index,21)
+        # lr_id, dw_id = divmod(index,7)
+    datasize = 10000
+    for s in scenarios:
+        for lr_id in range(3):
+            for dw_id in range(7):
+                run_experiment_nn(s,datasize, [lr_id,dw_id])
+
+    for s in scenarios:
+        run_experiment_nn(s,datasize,[1, 0],training=False)
