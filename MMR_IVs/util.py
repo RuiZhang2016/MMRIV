@@ -4,24 +4,14 @@ sys.path.append(ROOT_PATH)
 import torch
 from scenarios.abstract_scenario import AbstractScenario
 import autograd.numpy as np
-import logging
 from joblib import Parallel, delayed
-import random
-from torchvision import datasets, transforms
-from collections import defaultdict
-import math
+import torch.nn as nn
+import torch.nn.functional as F
+import autograd.scipy.linalg as splg
 
-def get_median_inter(x):
-    n,m = x.shape
-    def loop(a):
-        A = a[:,None]# np.tile(x[:,[i]],[1,n])
-        B = A.T
-        dist = abs(A - B)
-        dist = dist.flatten()
-        med = np.median(dist)
-        return med
-    mat = np.array([loop(x[:,i]) for i in range(m)])
-    return mat.reshape((1,-1))
+JITTER = 1e-7
+nystr_M = 300
+EYE_nystr = np.eye(nystr_M)
 
 def _sqdist(x,y,Torch=False):
     if y is None:
@@ -138,87 +128,6 @@ def jitchol(A, maxtries=5):
             num_tries += 1
     raise np.linalg.LinAlgError("not positive definite, even with jitter.")
 
-
-def data_generate(sname, n_train, n_test, use_x_images, use_z_images):
-    funcs = {'sin':lambda x: np.sin(x),
-            'step':lambda x: 0* (x<0) +1* (x>=0),
-            'abs':lambda x: np.abs(x),
-            'linear': lambda x: x}
-
-    digit_dict = None
-    if use_x_images or use_z_images:
-        train_loader = torch.utils.data.DataLoader(
-            datasets.MNIST(ROOT_PATH+"/datasets", train=True, download=True,
-                transform=transforms.Compose([
-                    transforms.ToTensor(),
-                    transforms.Normalize((0.1307,), (0.3081,))])), batch_size=60000)
-        test_loader = torch.utils.data.DataLoader(
-            datasets.MNIST(ROOT_PATH+"/datasets", train=False, download=True,
-                transform=transforms.Compose([
-                    transforms.ToTensor(),
-                    transforms.Normalize((0.1307,), (0.3081,))])), batch_size=10000)
-        train_data, test_data = list(train_loader), list(test_loader)
-        images_list = [train_data[0][0].numpy(), test_data[0][0].numpy()]
-        labels_list = [train_data[0][1].numpy(), test_data[0][1].numpy()]
-        del train_data, test_data
-
-        images = np.concatenate(images_list, axis=0)
-        labels = np.concatenate(labels_list, axis=0)
-        idx = list(range(images.shape[0]))
-        random.shuffle(idx)
-        images = images[idx]
-        labels = labels[idx]
-        digit_dict = defaultdict(list)
-        for label, image in zip(labels, images):
-            digit_dict[int(label)].append(image)
-        del images, labels, idx
-
-    Z,test_Z = np.random.uniform(-3,3,size=(n_train,2)),np.random.uniform(-3,3,size=(n_test,2))# np.random.normal(0,np.sqrt(2),size=(n_train,1))# np.random.uniform(-3,3,size=(n_train+n_test,2))
-    cofounder,test_cofounder = np.random.normal(0,1,size=(n_train,1)),np.random.normal(0,1,size=(n_test,1))
-    gamma,test_gamma = np.random.normal(0,.1,size=(n_train,1)),np.random.normal(0,.1,size=(n_test,1))
-    delta, test_delta = np.random.normal(0,.1,size=(n_train,1)),np.random.normal(0,.1,size=(n_test,1))
-    X = Z[:,[0]]+cofounder+gamma
-    test_X = test_Z[:,[0]] + test_cofounder+test_gamma
-    
-    if sname in funcs.keys():
-        func = funcs[sname]
-    else:
-        func = funcs['abs']
-    Y =func(X) + cofounder+delta
-    test_G = func(test_X)
-    train_Y = Y[:int(n_train/2)]
-    
-    if use_x_images:
-        X_digits = np.clip(1.5*X + 5.0, 0, 9).round()
-        test_X_digits = np.clip(1.5*test_X + 5.0, 0, 9).round()
-        X = np.stack([random.choice(digit_dict[int(d)]).flatten() for d in X_digits.flatten()], axis=0)
-        test_X =  np.stack([random.choice(digit_dict[int(d)]).flatten() for d in test_X_digits.flatten()], axis=0)
-        test_G = np.abs((test_X_digits - 5.0) / 1.5).reshape(-1, 1)
-    if use_z_images:
-        Z_digits = np.clip(1.5*Z[:, [0]] + 5.0, 0, 9).round()
-        Z = np.stack([random.choice(digit_dict[int(d)]).flatten() for d in Z_digits.flatten()], axis=0)
-    test_G = (test_G - train_Y.mean())/train_Y.std()
-    Y = (Y-train_Y.mean())/train_Y.std()
-    return X,Y,Z,test_X, test_G
-
-def nystrom_decomp(G,ind, Torch=False):
-    Gnm = G[:,ind]
-    sub_G = (Gnm)[ind,:]
-    
-    if Torch:
-        eig_val, eig_vec = torch.symeig(sub_G,eigenvectors=True)
-        #eig_vec = math.sqrt(len(ind) / G.shape[0]) * Gnm@eig_vec/eig_val
-    else:
-        eig_val, eig_vec = np.linalg.eigh(sub_G)
-        # eig_vec = np.sqrt(len(ind) / G.shape[0]) * Gnm@eig_vec/eig_val
-    eig_vec = math.sqrt(len(ind) / G.shape[0]) * Gnm@eig_vec/eig_val
-    eig_val /= len(ind) / G.shape[0]
-
-    if Torch:
-        return eig_val.float(), eig_vec.float()
-    else:
-        return eig_val, eig_vec
-
 def remove_outliers(array):
     if not isinstance(array, np.ndarray):
         raise Exception('input type should be numpy ndarray, instead of {}'.format(type(array)))
@@ -228,3 +137,71 @@ def remove_outliers(array):
     array = array[array<=Q3+1.5*IQR]
     array = array[ array>= Q1-1.5*IQR]
     return array
+
+
+def nystrom_decomp(G,ind):
+    Gnm = G[:,ind]
+    sub_G = (Gnm)[ind,:]
+
+    eig_val, eig_vec = np.linalg.eigh(sub_G)
+    eig_vec = np.sqrt(len(ind) / G.shape[0]) * Gnm@eig_vec/eig_val
+    eig_val /= len(ind) / G.shape[0]
+    return eig_val, eig_vec
+
+def nystrom_inv(W, ind):
+    EYEN = np.eye(W.shape[0])
+    eig_val, eig_vec = nystrom_decomp(W,ind)
+    tmp = np.matmul(np.diag(eig_val),eig_vec.T)
+    tmp = np.matmul(np.linalg.inv(JITTER*EYE_nystr +np.matmul(tmp,eig_vec)),tmp)
+    W_inv = (EYEN - np.matmul(eig_vec,tmp))/JITTER
+    return W_inv
+
+def chol_inv(W):
+    EYEN = np.eye(W.shape[0])
+    try:
+        tri_W = np.linalg.cholesky(W)
+        tri_W_inv = splg.solve_triangular(tri_W,EYEN,lower=True)
+        #tri_W,lower  = splg.cho_factor(W,lower=True)
+        # W_inv = splg.cho_solve((tri_W,True),EYEN)
+        W_inv = np.matmul(tri_W_inv.T,tri_W_inv)
+        W_inv = (W_inv + W_inv.T)/2
+        return W_inv
+    except Exception as e:
+        return False
+
+class FCNN(nn.Module):
+
+    def __init__(self,input_size):
+        super(FCNN, self).__init__()
+        # an affine operation: y = Wx + b
+        self.fc1 = nn.Linear(input_size, 100)
+        self.fc2 = nn.Linear(100, 100)
+        self.fc3 = nn.Linear(100, 1)
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+
+class CNN(nn.Module):
+
+    def __init__(self):
+        super(CNN, self).__init__()
+        # an affine operation: y = Wx + b
+        self.conv1 = nn.Conv2d(1, 6, 5)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 4 * 4, 100)
+        self.fc2 = nn.Linear(100, 64)
+        self.fc3 = nn.Linear(64, 1)
+
+    def forward(self, x):
+        x = x.view(x.shape[0], 1, 28, 28)
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = x.view(-1, 16 * 4 * 4)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x

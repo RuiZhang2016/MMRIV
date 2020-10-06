@@ -2,11 +2,9 @@ import torch
 import numpy as np
 from baselines.all_baselines import Poly2SLS, Vanilla2SLS, DirectNN, \
     GMM, DeepIV, AGMM
-import os,sys
-from scenarios.abstract_scenario import AbstractScenario
+import os
 import tensorflow
-from tabulate import tabulate
-from our_methods.util import ROOT_PATH, load_data
+from MMR_IVs.util import ROOT_PATH, load_data
 import random
 random.seed(527)
 

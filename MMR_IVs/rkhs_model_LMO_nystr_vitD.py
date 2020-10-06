@@ -1,20 +1,9 @@
-import add_path,os,sys
-import numpy
-import torch
-import torch.optim as optim
-import autograd.scipy.linalg as splg
 import autograd.numpy as np
 from autograd import value_and_grad
 from scipy.optimize import minimize
-from sklearn.model_selection import KFold
-from util import get_median_inter,get_median_inter_mnist, Kernel, load_data, ROOT_PATH,jitchol,_sqdist,remove_outliers
-from joblib import Parallel,delayed
-from early_stopping import EarlyStopping
-from autograd import primitive
-from scenarios.abstract_scenario import AbstractScenario
+from util import get_median_inter_mnist, Kernel, load_data, ROOT_PATH,jitchol,_sqdist,remove_outliers, nystrom_decomp, chol_inv
 import time
 import rpy2.robjects as robjects
-import pandas as pd
 import matplotlib.pyplot as plt
 
 Nfeval = 1
@@ -27,41 +16,10 @@ opt_params = None
 prev_norm = None
 opt_test_err = None
 
-def nystrom_decomp(G,ind):
-    Gnm = G[:,ind]
-    sub_G = (Gnm)[ind,:]
 
-    eig_val, eig_vec = np.linalg.eigh(sub_G)
-    eig_vec = np.sqrt(len(ind) / G.shape[0]) * Gnm@eig_vec/eig_val
-    eig_val /= len(ind) / G.shape[0]
-    return eig_val, eig_vec
-
-def nystrom_inv(W, ind):
-    EYEN = np.eye(W.shape[0])
-    eig_val, eig_vec = nystrom_decomp(W,ind)
-    tmp = np.matmul(np.diag(eig_val),eig_vec.T)
-    tmp = np.matmul(np.linalg.inv(JITTER*EYE_nystr +np.matmul(tmp,eig_vec)),tmp)
-    W_inv = (EYEN - np.matmul(eig_vec,tmp))/JITTER
-    return W_inv
-
-
-def chol_inv(W):
-    EYEN = np.eye(W.shape[0])
-    try:
-        tri_W = np.linalg.cholesky(W)
-        tri_W_inv = splg.solve_triangular(tri_W,EYEN,lower=True)
-        #tri_W,lower  = splg.cho_factor(W,lower=True)
-        # W_inv = splg.cho_solve((tri_W,True),EYEN)
-        W_inv = np.matmul(tri_W_inv.T,tri_W_inv)
-        W_inv = (W_inv + W_inv.T)/2
-        return W_inv
-    except Exception as e:
-        return False
-
-def test_LMO_err(nystr=True,IV=True):
+def experiment(nystr=True,IV=True):
     
-    def LMO_err(params,M=2,verbal=False):
-        n_params = len(params)
+    def LMO_err(params,M=2):
         params = np.exp(params)
         al,bl = params[:-1], params[-1]
         L = bl*bl*np.exp(-L0[0]/al[0]/al[0]/2)+bl*bl*np.exp(-L0[1]/al[1]/al[1]/2) +1e-6*EYEN # l(X,None,al,bl)# +1e-6*EYEN
@@ -92,7 +50,6 @@ def test_LMO_err(nystr=True,IV=True):
     def callback0(params, timer=None):
         global Nfeval, prev_norm, opt_params, opt_test_err
         if Nfeval % 1 == 0:
-            n_params = len(params)
             params = np.exp(params)
             al,bl = params[:-1], params[-1]
             L = bl*bl*np.exp(-L0[0]/al[0]/al[0]/2)+bl*bl*np.exp(-L0[1]/al[1]/al[1]/2) +1e-6*EYEN
@@ -102,7 +59,6 @@ def test_LMO_err(nystr=True,IV=True):
             else:
                 LWL_inv = chol_inv(L@W@L+L/N2+JITTER*EYEN)
                 alpha = LWL_inv@L@W@Y
-                # L_W_inv = chol_inv(W*N2+L_inv)
             pred_mean = L@alpha
             if timer:
                 return
@@ -145,14 +101,11 @@ def test_LMO_err(nystr=True,IV=True):
             plt.savefig('VitD.pdf',bbox_inches='tight')
         plt.close('all')
 
-    k,l = Kernel('rbf'), Kernel('rbf')
-    M = 2
     robjects.r['load'](ROOT_PATH+"/data/VitD.RData")
     data = np.array(robjects.r['VitD']).T
     
     # plot data
     fig = plt.figure()
-    ax = fig.add_subplot(111)
     plt.scatter((data[:,0])[data[:,4]>0],(data[:,2])[data[:,4]>0],marker='s',s=3,c='r',label='dead')
     plt.scatter((data[:,0])[data[:,4]==0],(data[:,2])[data[:,4]==0],marker='o',s=1,c='b',label='alive')
     lgnd = plt.legend()
@@ -181,7 +134,6 @@ def test_LMO_err(nystr=True,IV=True):
     else:
         W = EYEN/N2
     L0 = np.array([_sqdist(X[:,[i]],None) for i in range(X.shape[1])])
-    obj_grad = value_and_grad(lambda params: LMO_err(params))
     params0 =np.random.randn(3)/10
     bounds =  None # [[0.01,10],[0.01,5]]
     if nystr:
@@ -197,8 +149,8 @@ def test_LMO_err(nystr=True,IV=True):
 
 
 if __name__ == '__main__':
-    test_LMO_err(IV=True)
-    test_LMO_err(IV=False)
+    experiment(IV=True)
+    experiment(IV=False)
     
     
     

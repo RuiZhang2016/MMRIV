@@ -1,13 +1,12 @@
-import torch
+import torch,add_path
 import numpy as np
 from baselines import all_baselines
 from baselines.all_baselines import Poly2SLS, Vanilla2SLS, DirectNN, \
     DirectMNIST, GMM
-import os,sys
-from scenarios.abstract_scenario import AbstractScenario
+import os
 import tensorflow
 from tabulate import tabulate
-from our_methods.util import ROOT_PATH, load_data
+from MMR_IVs.util import ROOT_PATH, load_data
 import random
 random.seed(527)
 
@@ -94,20 +93,18 @@ def run_experiment(scenario_name, mid, repid, num_reps=10, seed=527,training=Fal
             print(mean_rep)
             means += [mean_rep]
     return means
-    # mean = np.mean(means,axis=0)
-    # std = np.std(means,axis=0)
+
 
 
 if __name__ == "__main__":
     scenarios = np.array(["mnist_z", "mnist_x", "mnist_xz"])
-    for sid in range(3):
+    for s in scenarios:
         for mid in range(5):
             for repid in range(10):
-                run_experiment(scenarios[sid], mid, repid, num_reps=10, seed=527,training=True)
+                run_experiment(s, mid, repid, num_reps=10, seed=527,training=True)
 
     rows = []
     for s in scenarios:
-        print(s)
         means = run_experiment(s, 0, 0, training=False)
         mean = np.mean(means,axis=0)
         std = np.std(means,axis=0)

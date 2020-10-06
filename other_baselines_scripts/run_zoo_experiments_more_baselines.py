@@ -2,11 +2,10 @@ import torch
 import numpy as np
 from baselines.all_baselines import Poly2SLS, Vanilla2SLS, DirectNN, \
     GMM, DeepIV, AGMM
-import os,sys
-from scenarios.abstract_scenario import AbstractScenario
+import os
 import tensorflow
 from tabulate import tabulate
-from our_methods.util import ROOT_PATH, load_data
+from MMR_IVs.util import ROOT_PATH, load_data
 import random
 random.seed(527)
 
@@ -27,7 +26,7 @@ def run_experiment(scenario_name,mid,repid,datasize, num_reps=10, seed=527,train
     np.random.seed(seed)
     tensorflow.set_random_seed(seed)
 
-    train, dev, test = load_data(scenario_name+'_{}'.format(datasize))
+    train, dev, test = load_data(ROOT_PATH+'/data/zoo/'+scenario_name+'_{}.npz'.format(datasize))
 
     # result folder
     folder = ROOT_PATH + "/results/zoo/" + scenario_name + "/"
@@ -60,10 +59,10 @@ def run_experiment(scenario_name,mid,repid,datasize, num_reps=10, seed=527,train
                 
                 model, time = method.fit(train.x, train.y, train.z, None)
                 np.save(folder+"%s_%d_%d_time.npy" % (method_name, rep,train.x.shape[0]),time)
-                # save_model(model, save_path, test)
-                # test_mse = eval_model(model, test)
-                # model_type_name = type(model).__name__
-                # print("Test MSE of %s: %f" % (model_type_name, test_mse))
+                save_model(model, save_path, test)
+                test_mse = eval_model(model, test)
+                model_type_name = type(model).__name__
+                print("Test MSE of %s: %f" % (model_type_name, test_mse))
         else:
             means2 = []
             times2 = []
@@ -88,17 +87,11 @@ def run_experiment(scenario_name,mid,repid,datasize, num_reps=10, seed=527,train
                 means += [means2]
             if len(times2) == len(methods):
                 times += [times2]
-    #print('means',np.mean(np.array(means),axis=0))
-    #print('std',np.std(np.array(means),axis=0))
     return means,times
 
 
 if __name__ == "__main__":
     scenarios = np.array(["abs", "linear", "sin", "step"])
-    # datasize = int(sys.argv[2])
-    # ind = int(sys.argv[1])
-    # sid, ind = divmod(ind,60)
-    # mid, repid = divmod(ind,10)
     for datasize in [200,2000]:
         for sid in range(4):
             for mid in range(6):

@@ -1,7 +1,5 @@
 import os,sys,torch,add_path
 import torch.autograd as ag
-import torch.nn as nn
-import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
 from scenarios.abstract_scenario import AbstractScenario
@@ -11,45 +9,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import PolynomialFeatures
 import scipy
 from joblib import Parallel, delayed
-from util import get_median_inter, get_median_inter_mnist, Kernel, data_generate, load_data, ROOT_PATH,_sqdist
-
-
-class Net(nn.Module):
-
-    def __init__(self,input_size):
-        super(Net, self).__init__()
-        # an affine operation: y = Wx + b
-        self.fc1 = nn.Linear(input_size, 100)
-        self.fc2 = nn.Linear(100, 100)
-        self.fc3 = nn.Linear(100, 1)
-
-    def forward(self, x):
-        x = torch.relu(self.fc1(x))
-        x = torch.relu(self.fc2(x))
-        x = self.fc3(x)
-        return x
-
-class CNN(nn.Module):
-
-    def __init__(self):
-        super(CNN, self).__init__()
-        # an affine operation: y = Wx + b
-        self.conv1 = nn.Conv2d(1, 6, 5)
-        self.pool = nn.MaxPool2d(2, 2)
-        self.conv2 = nn.Conv2d(6, 16, 5)
-        self.fc1 = nn.Linear(16 * 4 * 4, 100)
-        self.fc2 = nn.Linear(100, 64)
-        self.fc3 = nn.Linear(64, 1)
-
-    def forward(self, x):
-        x = x.view(x.shape[0], 1, 28, 28)
-        x = self.pool(F.relu(self.conv1(x)))
-        x = self.pool(F.relu(self.conv2(x)))
-        x = x.view(-1, 16 * 4 * 4)
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = self.fc3(x)
-        return x
+from util import get_median_inter_mnist, Kernel, data_generate, load_data, ROOT_PATH,_sqdist
 
 
 def run_experiment_nn(sname,indices=[],seed=527,training=True):
@@ -60,7 +20,7 @@ def run_experiment_nn(sname,indices=[],seed=527,training=True):
     elif len(indices)==3:
         lr_id, dw_id,W_id = indices
     # load data
-    folder = ROOT_PATH+"/our_methods/results/mendelian/"+sname+"/"
+    folder = ROOT_PATH+"/MMR_IVs/results/mendelian/"+sname+"/"
     train, dev, test = load_data(ROOT_PATH+"/data/mendelian/"+sname+'.npz',Torch=True)
 
     n_train = train.x.shape[0]
@@ -125,7 +85,7 @@ def run_experiment_nn(sname,indices=[],seed=527,training=True):
     if training is True:
         print('training')
         for rep in range(10):
-            save_path = os.path.join(folder, 'our_method_nn_{}_{}_{}_{}.npz'.format(rep,lr_id,dw_id,train.x.shape[0]))
+            save_path = os.path.join(folder, 'mmr_iv_nn_{}_{}_{}_{}.npz'.format(rep,lr_id,dw_id,train.x.shape[0]))
             # if os.path.exists(save_path):
             #    continue
             lr,dw = lrs[lr_id],decay_weights[dw_id]
@@ -133,7 +93,7 @@ def run_experiment_nn(sname,indices=[],seed=527,training=True):
             t0 = time.time()
             err,_,net = fit(train.x.float(),train.y.float(),train.z.float(),dev.x.float(),dev.y.float(),dev.z.float(),lr,dw)
             t1 = time.time()-t0
-            np.save(folder+'our_method_nn_{}_{}_{}_{}_time.npy'.format(rep,lr_id,dw_id,train.x.shape[0]),t1)
+            np.save(folder+'mmr_iv_nn_{}_{}_{}_{}_time.npy'.format(rep,lr_id,dw_id,train.x.shape[0]),t1)
             g_pred = net(test.x.float()).detach().numpy()
             test_err = ((g_pred-test.g.numpy())**2).mean()
             np.savez(save_path,err=err.detach().numpy(),lr=lr,dw=dw, g_pred=g_pred,test_err=test_err)
@@ -147,12 +107,12 @@ def run_experiment_nn(sname,indices=[],seed=527,training=True):
             times2 = []
             for lr_id in range(len(lrs)):
                 for dw_id in range(len(decay_weights)):
-                    load_path = os.path.join(folder, 'our_method_nn_{}_{}_{}_{}.npz'.format(rep,lr_id,dw_id,train.x.shape[0]))
+                    load_path = os.path.join(folder, 'mmr_iv_nn_{}_{}_{}_{}.npz'.format(rep,lr_id,dw_id,train.x.shape[0]))
                     if os.path.exists(load_path):
                         res = np.load(load_path)
                         res_list += [res['err'].astype(float)]
                         other_list += [[res['lr'].astype(float),res['dw'].astype(float),res['test_err'].astype(float)]]
-                    time_path = folder+'our_method_nn_{}_{}_{}_{}_time.npy'.format(rep,lr_id,dw_id,train.x.shape[0])
+                    time_path = folder+'mmr_iv_nn_{}_{}_{}_{}_time.npy'.format(rep,lr_id,dw_id,train.x.shape[0])
                     if os.path.exists(time_path):
                         t = np.load(time_path)
                         times2 += [t]
