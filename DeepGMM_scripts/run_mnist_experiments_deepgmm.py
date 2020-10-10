@@ -1,4 +1,4 @@
-import torch
+import torch, add_path
 import numpy as np
 import os,sys
 from methods.mnist_x_model_selection_method import MNISTXModelSelectionMethod
@@ -6,7 +6,7 @@ from methods.mnist_xz_model_selection_method import MNISTXZModelSelectionMethod
 from methods.mnist_z_model_selection_method import MNISTZModelSelectionMethod
 from scenarios.abstract_scenario import AbstractScenario
 from joblib import Parallel, delayed
-from our_methods.util import ROOT_PATH, load_data
+from MMR_IVs.util import ROOT_PATH, load_data
 import random
 
 random.seed(527)
@@ -21,7 +21,7 @@ SCENARIO_METHOD_CLASSES = {
 RESULTS_FOLDER = ROOT_PATH + "/results/mnist/"
 
 
-def run_experiment(scenario_name,repid,model_id,training=False):
+def run_experiment(scenario_name,repid,model_id=None,training=False):
     # set random seed
     seed = 527
     torch.manual_seed(seed)
@@ -44,7 +44,8 @@ def run_experiment(scenario_name,repid,model_id,training=False):
                 pass
             print('here')
             method.fit(train.x, train.z, train.y, dev.x, dev.z, dev.y,
-                       g_dev=dev.g,rep=rep,model_id=model_id, verbose=True)
+                       g_dev=dev.g,rep=rep,model_id=None,
+                       verbose=True)
             g_pred_test = method.predict(test.x)
             mse = float(((g_pred_test - test.g) ** 2).mean())
 
@@ -78,7 +79,7 @@ def main():
 if __name__ == "__main__":
     for sid in range(3):
         for repid in range(10):
-            run_experiment(SCENARIOS_NAMES[sid], repid,-1, training=True)
+            run_experiment(SCENARIOS_NAMES[sid], repid, training=True)
 
     for s in SCENARIOS_NAMES:
         means = run_experiment(s, 0, 3, training=False)

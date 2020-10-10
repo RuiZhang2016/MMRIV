@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import PolynomialFeatures
 import scipy
 from joblib import Parallel, delayed
-from util import get_median_inter_mnist, Kernel, data_generate, load_data, ROOT_PATH,_sqdist
+from util import get_median_inter_mnist, Kernel, load_data, ROOT_PATH,_sqdist
 
 
 def run_experiment_nn(sname,indices=[],seed=527,training=True):

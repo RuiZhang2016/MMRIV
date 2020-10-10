@@ -3,7 +3,7 @@ import torch.optim as optim
 import numpy as np
 from early_stopping import EarlyStopping
 import time
-from util import get_median_inter_mnist, Kernel, data_generate, load_data, ROOT_PATH,_sqdist,FCNN,CNN
+from util import get_median_inter_mnist, Kernel, load_data, ROOT_PATH,_sqdist,FCNN,CNN
 
 
 

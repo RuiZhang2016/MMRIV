@@ -1,8 +1,5 @@
 import os,sys,torch
 import numpy as np
-import time
-import scipy
-from joblib import Parallel, delayed
 from util import load_data, ROOT_PATH,_sqdist
 from sklearn.decomposition import PCA
 
@@ -14,9 +11,6 @@ def precomp(sname,i,seed=527,training=True):
         M = int(train.z.shape[0]/400)
         train_K0 = _sqdist(train.z[i*M:(i+1)*M],train.z)
         dev_K0 = _sqdist(dev.z[i*M:(i+1)*M],dev.z)
-
-        # dist = np.sqrt(train_K0)
-        # a = np.median(dist.flatten())
     
         np.savez(ROOT_PATH+'/tmp/{}_K_{}.npz'.format(sname,i),train_K0=train_K0, dev_K0 = dev_K0)
     

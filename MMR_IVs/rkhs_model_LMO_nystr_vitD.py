@@ -1,7 +1,7 @@
 import autograd.numpy as np
 from autograd import value_and_grad
 from scipy.optimize import minimize
-from util import get_median_inter_mnist, Kernel, load_data, ROOT_PATH,jitchol,_sqdist,remove_outliers, nystrom_decomp, chol_inv
+from util import get_median_inter_mnist, Kernel, load_data, ROOT_PATH,_sqdist,remove_outliers, nystrom_decomp, chol_inv
 import time
 import rpy2.robjects as robjects
 import matplotlib.pyplot as plt
@@ -78,27 +78,37 @@ def experiment(nystr=True,IV=True):
         opt_params = params
         opt_test_err = ((pred_mean-Y)**2).mean()
         print('params,test_err, norm:',opt_params, opt_test_err, prev_norm)
-       
-        ages =np.linspace(min(X[:,0])-abs(min(X[:,0]))*0.05,max(X[:,0])+abs(max(X[:,0]))*0.05,32)
-        vitd = np.linspace(min(X[:,1])-abs(min(X[:,1]))*0.05,max(X[:,1])+abs(max(X[:,1]))*0.05,64)
+
+        ages = np.linspace(min(X[:, 0]) - abs(min(X[:, 0])) * 0.05, max(X[:, 0]) + abs(max(X[:, 0])) * 0.05, 32)
+        vitd = np.linspace(min(X[:, 1]) - abs(min(X[:, 1])) * 0.05, max(X[:, 1]) + abs(max(X[:, 1])) * 0.05, 64)
 
         X_mesh, Y_mesh = np.meshgrid(ages, vitd)
-        table = bl**2*np.hstack([np.exp(-_sqdist(X_mesh[:,[i]],X[:,[0]])/al[0]**2/2-_sqdist(Y_mesh[:,[i]],X[:,[1]])/al[1]**2/2)@alpha for i in range(X_mesh.shape[1])])
+        table = bl ** 2 * np.hstack([np.exp(
+            -_sqdist(X_mesh[:, [i]], X[:, [0]]) / al[0] ** 2 / 2 - _sqdist(Y_mesh[:, [i]], X[:, [1]]) / al[
+                1] ** 2 / 2) @ alpha for i in range(X_mesh.shape[1])])
+        maxv = np.max(table[:])
+        minv = np.min(table[:])
         fig = plt.figure()
         ax = fig.add_subplot(111)
 
         # Generate a contour plot
-        cpf = ax.contourf(X_mesh,Y_mesh, table)
+        Y0 = data0[:, [4]]
+        X0 = data0[:, [0, 2]]
+        Z0 = data0[:, [0, 1]]
+        ages = np.linspace(min(X0[:, 0]) - abs(min(X0[:, 0])) * 0.05, max(X0[:, 0]) + abs(max(X0[:, 0])) * 0.05, 32)
+        vitd = np.linspace(min(X0[:, 1]) - abs(min(X0[:, 1])) * 0.05, max(X0[:, 1]) + abs(max(X0[:, 1])) * 0.05, 64)
+        X_mesh, Y_mesh = np.meshgrid(ages, vitd)
+        cpf = ax.contourf(X_mesh, Y_mesh, (table - minv) / (maxv - minv))
         # cp = ax.contour(X_mesh, Y_mesh, table)
-        plt.colorbar(cpf,ax=ax)
-        plt.xlabel('Age',fontsize=12)
-        plt.ylabel('Vitamin D',fontsize=12)
+        plt.colorbar(cpf, ax=ax)
+        plt.xlabel('Age', fontsize=12)
+        plt.ylabel('Vitamin D', fontsize=12)
         plt.xticks(fontsize=12)
         plt.yticks(fontsize=12)
         if IV:
-            plt.savefig('VitD_IV.pdf',bbox_inches='tight')
+            plt.savefig('VitD_IV.pdf', bbox_inches='tight')
         else:
-            plt.savefig('VitD.pdf',bbox_inches='tight')
+            plt.savefig('VitD.pdf', bbox_inches='tight')
         plt.close('all')
 
     robjects.r['load'](ROOT_PATH+"/data/VitD.RData")
@@ -118,6 +128,7 @@ def experiment(nystr=True,IV=True):
     plt.savefig('VitD_data.pdf',bbox_inches='tight')
     plt.close('all')
 
+    data0 = data.copy()
     for i in range(data.shape[1]):
         data[:,i] = (data[:,i]-data[:,i].mean())/data[:,i].std()
     Y = data[:,[4]]

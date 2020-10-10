@@ -1,4 +1,4 @@
-import torch
+import torch, add_path
 import numpy as np
 import os
 from scenarios.abstract_scenario import AbstractScenario
@@ -6,7 +6,7 @@ from methods.toy_model_selection_method import ToyModelSelectionMethod
 import sys
 from scipy import io
 from tabulate import tabulate
-from our_methods.util import ROOT_PATH, load_data
+from MMR_IVs.util import ROOT_PATH, load_data
 import random
 random.seed(527)
 
@@ -65,7 +65,7 @@ if __name__ == "__main__":
             save_path = folder+file_name
             res = np.load(save_path)
             means2 +=  [np.mean((res['g_hat']-res['g_true'])**2)]
-            time_path = folder+"Ours_%d_time.npy" % (rep)
+            time_path = folder+"deepgmm_%d_time.npy" % (rep)
             res = np.load(time_path)
             times2 += [res]
         means += [means2]

@@ -2,8 +2,7 @@ import os
 import autograd.numpy as np
 from autograd import value_and_grad
 from scipy.optimize import minimize
-from util import get_median_inter_mnist, Kernel, load_data, ROOT_PATH,jitchol,_sqdist, \
-data_generate,nystrom_decomp,remove_outliers,nystrom_decomp, chol_inv
+from util import get_median_inter_mnist, Kernel, load_data, ROOT_PATH,_sqdist,nystrom_decomp,remove_outliers,nystrom_decomp, chol_inv
 from scipy.sparse import csr_matrix
 import random
 import time

@@ -145,13 +145,6 @@ def run_experiment_nn(sname,datasize,indices=[],seed=527,training=True):
             optim_id = np.argsort(res_list)[0]# np.argmin(res_list)
             print(rep,'--',other_list[optim_id],np.min(res_list))
             opt_res += [other_list[optim_id][-1]]
-            # times += [times2[optim_id]]
-            # lr,dw = [torch.from_numpy(e).float() for e in params_list[optim_id]]
-            # _,_,net = fit(X[:2000],Y[:2000],Z[:2000],X[2000:],Y[2000:],Z[2000:],a,lr,dw)
-            # g_pred = net(test_X).detach().numpy()
-            # test_err = ((g_pred-test_G.numpy())**2).mean()
-            # print(test_err)
-            # np.savez(save_path,g_pred=g_pred,g_true=test.g,x=test.w)
         print('time: ', np.mean(times),np.std(times))
         print(np.mean(opt_res),np.std(opt_res))
 

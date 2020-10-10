@@ -1,4 +1,4 @@
-import torch
+import torch, add_path
 import numpy as np
 from baselines.all_baselines import Poly2SLS, Vanilla2SLS, DirectNN, \
     GMM, DeepIV, AGMM

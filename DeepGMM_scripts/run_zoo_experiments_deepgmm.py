@@ -1,11 +1,11 @@
-import torch
+import torch, add_path
 import numpy as np
 import os
 from scenarios.abstract_scenario import AbstractScenario
 from methods.toy_model_selection_method import ToyModelSelectionMethod
 import sys
 from tabulate import tabulate
-from our_methods.util import ROOT_PATH, load_data
+from MMR_IVs.util import ROOT_PATH, load_data
 import random
 random.seed(527)
 
@@ -18,7 +18,7 @@ def run_experiment(scenario_name, repid, datasize):
     num_reps = 10
 
     print("\nLoading " + scenario_name + "...")
-    train, dev, test = load_data(scenario_name+'_{}'.format(datasize),Torch=True)
+    train, dev, test = load_data(ROOT_PATH+'/data/zoo/'+scenario_name+'_{}.npz'.format(datasize),Torch=True)
 
     folder = ROOT_PATH+"/results/zoo/" + scenario_name + "/"
     for rep in range(repid,repid+1):
@@ -34,7 +34,7 @@ def run_experiment(scenario_name, repid, datasize):
         print("MSE on test:", mse)
         print("")
         print("saving results...")
-        file_name = "Ours_%d_%d.npz" %(rep,train.x.shape[0])
+        file_name = "deepgmm_%d_%d.npz" %(rep,train.x.shape[0])
         save_path = os.path.join(folder, file_name)
         os.makedirs(folder, exist_ok=True)
         np.savez(save_path, x=test.w, y=test.y, g_true=test.g,

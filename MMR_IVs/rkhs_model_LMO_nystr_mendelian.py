@@ -1,12 +1,8 @@
-import add_path,os,sys
+import add_path,os
 import autograd.numpy as np
-from scenarios.abstract_scenario import AbstractScenario
-import matplotlib.pyplot as plt
 from autograd import value_and_grad
 from scipy.optimize import minimize
-from sklearn.model_selection import KFold
 from util import get_median_inter_mnist, Kernel, load_data, ROOT_PATH,jitchol,_sqdist, remove_outliers,nystrom_decomp, chol_inv
-from joblib import Parallel,delayed
 import time
 
 
