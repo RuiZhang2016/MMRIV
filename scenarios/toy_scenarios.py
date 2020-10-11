@@ -54,9 +54,11 @@ class HingeLinearScenario(AbstractScenario):
 
 
 class MendelianScenario(AbstractScenario):
-    def __init__(self,n_iv):
+    def __init__(self,n_iv,c1,c2):
         AbstractScenario.__init__(self)
         self.n_iv = n_iv
+        self.c1 = c1
+        self.c2 = c2
 
     def generate_data(self, num_data):
         confounders = np.random.normal(0, 1, size=(num_data, 1))
@@ -64,11 +66,9 @@ class MendelianScenario(AbstractScenario):
         z = np.array([np.random.binomial(2, p, num_data) for p in ps]).T
         # z = np.random.uniform(-3, 3, size=(num_data, self.n_iv))
         coeff = np.random.uniform(0.8/self.n_iv, 1.2/self.n_iv, size=(1, self.n_iv))
-        c1, c2 = 1,1
-        x = np.sum(z * coeff, axis=1, keepdims=True) + c2*confounders + np.random.normal(0, 0.1, size=(num_data, 1))
+        x = np.sum(z * coeff, axis=1, keepdims=True) + self.c2*confounders + np.random.normal(0, 0.1, size=(num_data, 1))
         g = x
-        y = g + c1 * confounders + np.random.normal(0, 0.1, size=(num_data, 1))
-        print(z)
+        y = g + self.c1 * confounders + np.random.normal(0, 0.1, size=(num_data, 1))
 
         return x, z, y, g, x
 

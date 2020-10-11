@@ -1,11 +1,11 @@
-import os,sys,torch
+import os
 import numpy as np
 from util import load_data, ROOT_PATH,_sqdist
 from sklearn.decomposition import PCA
 
-def precomp(sname,i,seed=527,training=True):
+def precomp(sname,i,seed=527):
     np.random.seed(seed)
-    train, dev, test = load_data(sname,Torch=False)
+    train, dev, test = load_data(ROOT_PATH+'/data/'+sname+'/main.npz',Torch=False)
     
     if sname in ['mnist_z','mnist_xz']:
         M = int(train.z.shape[0]/400)
@@ -26,18 +26,17 @@ def precomp(sname,i,seed=527,training=True):
         test_L0 = _sqdist(test_X[:,[i]],X[:,[i]])
         np.savez(ROOT_PATH+'/tmp/{}_L_{}.npz'.format(sname,i),train_L0=train_L0, test_L0=test_L0, dev_L0 = dev_L0)
 
-if __name__ == '__main__': 
-    ind = int(sys.argv[1])
-    # for ind in range(16)
-    # for sname in ['mnist_z','mnist_x','mnist_xz']:
-    #    precomp(sname,ind)
-    # assert 1 == 0
+if __name__ == '__main__':
+    for ind in range(400):
+        for sname in ['mnist_z','mnist_x','mnist_xz']:
+            precomp(sname,ind)
     for sname in ['mnist_z','mnist_x','mnist_xz']:
         if sname in ['mnist_z','mnist_xz']:
             train_K0 = []
             dev_K0 = []
             for w_id in range(400):
                 res = np.load(ROOT_PATH+'/tmp/{}_K_{}.npz'.format(sname,w_id))
+                os.remove(ROOT_PATH+'/tmp/{}_K_{}.npz'.format(sname,w_id))
                 train_K0 += [res['train_K0']]
                 dev_K0 += [res['dev_K0']]
             train_K0 = np.vstack(train_K0)
@@ -53,6 +52,7 @@ if __name__ == '__main__':
             test_L0 = []
             for i in range(8):
                 L0 = np.load(ROOT_PATH+'/tmp/{}_L_{}.npz'.format(sname,i))
+                os.remove(ROOT_PATH + '/tmp/{}_L_{}.npz'.format(sname,i))
                 train_L0 += [L0['train_L0']]
                 test_L0 += [L0['test_L0']]
             np.savez(ROOT_PATH+'/mnist_precomp/{}_Ls.npz'.format(sname),train_L0=train_L0, test_L0=test_L0)

@@ -1,9 +1,7 @@
 import torch, add_path
 import numpy as np
 import os
-from scenarios.abstract_scenario import AbstractScenario
 from methods.toy_model_selection_method import ToyModelSelectionMethod
-import sys
 from scipy import io
 from tabulate import tabulate
 from MMR_IVs.util import ROOT_PATH, load_data

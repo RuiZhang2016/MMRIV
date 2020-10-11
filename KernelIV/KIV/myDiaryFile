@@ -154,3 +154,165 @@ mendelian_16_0.5_1
 
     0.0088
 
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load')" style="font-weight:bold">load</a>
+Unable to read file 'abs_200.mat'. No such file or directory.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('main_zoo', '/Users/ruizhang/PycharmProjects/Maximum-Moment-Restriction/KernelIV/KIV/main_zoo.m', 12)" style="font-weight:bold">main_zoo</a> (<a href="matlab: opentoline('/Users/ruizhang/PycharmProjects/Maximum-Moment-Restriction/KernelIV/KIV/main_zoo.m',12,0)">line 12</a>)
+    data = load(strcat(design,'.mat'));
+} 
+main_zoo
+   400     1
+
+   400     1
+
+   400     2
+
+   200     1
+
+   200     1
+
+Elapsed time is 0.312756 seconds.
+
+<a href = "matlab: helpview('optim','local_min_unconstrained','CSHelpWindow');">Local minimum found</a>.
+
+Optimization completed because the <a href = "matlab: helpview('optim','grad_size','CSHelpWindow');">size of the gradient</a> is less than
+the value of the <a href = "matlab: helpview('optim','optimality_tolerance_unc','CSHelpWindow');">optimality tolerance</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit1basic'},{'optim:fminusub:Exit1detailed','6.861252e-08','1.000000e-06'},true,true);;">stopping criteria details</a>>
+
+<a href = "matlab: helpview('optim','local_min_unconstrained','CSHelpWindow');">Local minimum found</a>.
+
+Optimization completed because the <a href = "matlab: helpview('optim','grad_size','CSHelpWindow');">size of the gradient</a> is less than
+the value of the <a href = "matlab: helpview('optim','optimality_tolerance_unc','CSHelpWindow');">optimality tolerance</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit1basic'},{'optim:fminusub:Exit1detailed','1.299408e-07','1.000000e-06'},true,true);;">stopping criteria details</a>>
+Elapsed time is 0.004743 seconds.
+abs_data_200
+    0.0626
+
+    0.0626
+
+     0
+
+   400     1
+
+   400     1
+
+   400     2
+
+   200     1
+
+   200     1
+
+Elapsed time is 0.168856 seconds.
+
+<a href = "matlab: helpview('optim','local_min_unconstrained','CSHelpWindow');">Local minimum found</a>.
+
+Optimization completed because the <a href = "matlab: helpview('optim','grad_size','CSHelpWindow');">size of the gradient</a> is less than
+the value of the <a href = "matlab: helpview('optim','optimality_tolerance_unc','CSHelpWindow');">optimality tolerance</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit1basic'},{'optim:fminusub:Exit1detailed','6.861252e-08','1.000000e-06'},true,true);;">stopping criteria details</a>>
+
+<a href = "matlab: helpview('optim','local_min_unconstrained','CSHelpWindow');">Local minimum found</a>.
+
+Optimization completed because the <a href = "matlab: helpview('optim','grad_size','CSHelpWindow');">size of the gradient</a> is less than
+the value of the <a href = "matlab: helpview('optim','optimality_tolerance_unc','CSHelpWindow');">optimality tolerance</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit1basic'},{'optim:fminusub:Exit1detailed','3.004371e-08','1.000000e-06'},true,true);;">stopping criteria details</a>>
+Elapsed time is 0.003617 seconds.
+linear_data_200
+    0.0235
+
+    0.0235
+
+     0
+
+   400     1
+
+   400     1
+
+   400     2
+
+   200     1
+
+   200     1
+
+Elapsed time is 0.165248 seconds.
+
+<a href = "matlab: helpview('optim','local_min_unconstrained','CSHelpWindow');">Local minimum found</a>.
+
+Optimization completed because the <a href = "matlab: helpview('optim','grad_size','CSHelpWindow');">size of the gradient</a> is less than
+the value of the <a href = "matlab: helpview('optim','optimality_tolerance_unc','CSHelpWindow');">optimality tolerance</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit1basic'},{'optim:fminusub:Exit1detailed','6.861252e-08','1.000000e-06'},true,true);;">stopping criteria details</a>>
+
+<a href = "matlab: helpview('optim','local_min_unconstrained','CSHelpWindow');">Local minimum found</a>.
+
+Optimization completed because the <a href = "matlab: helpview('optim','grad_size','CSHelpWindow');">size of the gradient</a> is less than
+the value of the <a href = "matlab: helpview('optim','optimality_tolerance_unc','CSHelpWindow');">optimality tolerance</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit1basic'},{'optim:fminusub:Exit1detailed','1.270572e-09','1.000000e-06'},true,true);;">stopping criteria details</a>>
+Elapsed time is 0.009018 seconds.
+sin_data_200
+    0.0864
+
+    0.0864
+
+     0
+
+   400     1
+
+   400     1
+
+   400     2
+
+   200     1
+
+   200     1
+
+Elapsed time is 0.161311 seconds.
+
+<a href = "matlab: helpview('optim','local_min_unconstrained','CSHelpWindow');">Local minimum found</a>.
+
+Optimization completed because the <a href = "matlab: helpview('optim','grad_size','CSHelpWindow');">size of the gradient</a> is less than
+the value of the <a href = "matlab: helpview('optim','optimality_tolerance_unc','CSHelpWindow');">optimality tolerance</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit1basic'},{'optim:fminusub:Exit1detailed','6.861252e-08','1.000000e-06'},true,true);;">stopping criteria details</a>>
+
+<a href = "matlab: helpview('optim','local_min_unconstrained','CSHelpWindow');">Local minimum found</a>.
+
+Optimization completed because the <a href = "matlab: helpview('optim','grad_size','CSHelpWindow');">size of the gradient</a> is less than
+the value of the <a href = "matlab: helpview('optim','optimality_tolerance_unc','CSHelpWindow');">optimality tolerance</a>.
+
+<<a href = "matlab: createExitMsg({'optim:fminusub:Exit1basic'},{'optim:fminusub:Exit1detailed','2.177322e-07','1.000000e-06'},true,true);;">stopping criteria details</a>>
+Elapsed time is 0.004232 seconds.
+step_data_200
+    0.0549
+
+    0.0549
+
+     0
+
+        4000           1
+
+        4000           1
+
+        4000           2
+
+        2000           1
+
+        2000           1
+
+Elapsed time is 14.529928 seconds.
+if system_dependent('IsDebugMode')==1, dbquit; end
+main_mendelian
+       10000           1
+
+       10000           1
+
+       10000           8
+
+       10000           1
+
+       10000           1
+
