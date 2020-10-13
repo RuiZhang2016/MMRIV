@@ -5,7 +5,7 @@ Python implementation of Kernel Maximum Moment Restriction for Instrumental Vari
 1. Install virtual environment: conda create -n MMR python=3.6
 2. Activate environment: conda activate MMR
 3. Install requirements: pip install -r requirements.txt
-4. Download data from [the anonymous dropbox link](https://www.dropbox.com/sh/qxyh1ixpaceywf7/AAAk04Ls2VMDn0dqhn-4CSm-a?dl=0) to [the repo path] as [the repo path]/data/
+4. Download data from [the anonymous dropbox link](https://www.dropbox.com/sh/qxyh1ixpaceywf7/AAAk04Ls2VMDn0dqhn-4CSm-a?dl=0) to [the repo path] as [the repo path]/data/ without changing the data folder structure.
 5. Run DeepGMM on low-dimensional (or MNIST or Mendelian) data: (1) cd [the repo path]/DeepGMM_scripts/ (2) python run_zoo(or mnist or mendelian)_experiments_deepgmm.py 
 6. Run KernelIV on low-dimensional (or Mendelian) data: (1) cd [the repo path]/KernelIV/KIV/ (2) [use matlab run] main_zoo(or mendelian).m
 7. Run other baselines on low-dimensional (or MNIST or Mendelian) data: (1) cd [the repo path]/other_baselines_scripts/ (2) python run_zoo(or mnist or mendelian)_experiments_more_baselines.py
