@@ -1,5 +1,5 @@
 # Maximum-Moment-Restriction
-Python implementation of Kernel Maximum Moment Restriction for Instrumental Variable Regression.
+Python implementation of Maximum Moment Restriction for Instrumental Variable Regression (MMRIV).
 
 # Steps to run the experiments
 1. Install virtual environment: conda create -n MMR python=3.6
