@@ -119,6 +119,7 @@ def experiment(sname, seed,datasize, nystr=False):
     except Exception as e:
         print(e)
     PATH = ROOT_PATH + "/MMR_IVs/results/zoo/" + sname + "/"
+    os.makedirs(PATH, exist_ok=True)
     np.save(PATH+'LMO_errs_{}_nystr_{}.npy'.format(seed,train.x.shape[0]),[opt_params,prev_norm,opt_test_err])
 
 def summarize_res(sname,datasize):

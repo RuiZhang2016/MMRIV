@@ -74,10 +74,10 @@ def run_experiment(scenario_name, mid, repid, num_reps=10, seed=527,training=Fal
                 print("Running " + method_name)
                 model,time = method.fit(train.x, train.y, train.z, None)
                 folder = ROOT_PATH+"/results/mnist/" + scenario_name + "/"
+		os.makedirs(folder, exist_ok=True)
                 np.save(folder+'{}_{}_time.npy'.format(method_name,rep),time)
                 file_name = "%s_%d.npz" % (method_name, rep)
                 save_path = os.path.join(folder, file_name)
-                os.makedirs(folder, exist_ok=True)
                 save_model(model, save_path, test)
                 test_mse = eval_model(model, test)
                 model_type_name = type(model).__name__

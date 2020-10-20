@@ -21,6 +21,7 @@ def run_experiment_nn(sname,indices=[],seed=527,training=True):
         lr_id, dw_id,W_id = indices
     # load data
     folder = ROOT_PATH+"/MMR_IVs/results/mendelian/"+sname+"/"
+    os.makedirs(folder, exist_ok=True)
     train, dev, test = load_data(ROOT_PATH+"/data/mendelian/"+sname+'.npz',Torch=True)
 
     n_train = train.x.shape[0]

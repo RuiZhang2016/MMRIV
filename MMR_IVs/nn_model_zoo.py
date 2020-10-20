@@ -25,6 +25,7 @@ def run_experiment_nn(sname,datasize,indices=[],seed=527,training=True):
         lr_id, dw_id,W_id = indices
     # load data
     folder = ROOT_PATH+"/MMR_IVs/results/zoo/" + sname + "/"
+    os.makedirs(folder, exist_ok=True)
     
     train, dev, test = load_data(ROOT_PATH+"/data/zoo/"+sname+'_{}.npz'.format(datasize),Torch=True)
     X,Z,Y = torch.cat((train.x,dev.x),dim=0).float(),torch.cat((train.z,dev.z),dim=0).float(),torch.cat((train.y,dev.y),dim=0).float()
@@ -41,7 +42,6 @@ def run_experiment_nn(sname,datasize,indices=[],seed=527,training=True):
     # training loop
     lrs = [2e-4,1e-4,5e-5] # [3,5]
     decay_weights = [1e-12,1e-11,1e-10,1e-9,1e-8,1e-7,1e-6] # [11,5]
-    os.makedirs(folder, exist_ok=True)
 
     def my_loss(output, target, indices, K):
         d = output - target

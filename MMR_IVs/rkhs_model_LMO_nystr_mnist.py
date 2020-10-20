@@ -132,6 +132,7 @@ def experiment(sname, seed, nystr=True):
     obj_grad = value_and_grad(lambda params: LMO_err(params))
     res = minimize(obj_grad, x0=params0,bounds=bounds, method='L-BFGS-B',jac=True,options={'maxiter':5000,'disp':True,'ftol':0},callback=callback0)
     PATH = ROOT_PATH + "/MMR_IVs/results/"+ sname + "/"
+    os.makedirs(PATH, exist_ok=True)
     np.save(PATH+'LMO_errs_{}_nystr.npy'.format(seed),[opt_params,prev_norm,opt_test_err])
 
 if __name__ == '__main__':

@@ -21,6 +21,7 @@ def run_experiment(scenario_name, repid, datasize):
     train, dev, test = load_data(ROOT_PATH+'/data/zoo/'+scenario_name+'_{}.npz'.format(datasize),Torch=True)
 
     folder = ROOT_PATH+"/results/zoo/" + scenario_name + "/"
+    os.makedirs(folder, exist_ok=True)
     for rep in range(repid,repid+1):
         method = ToyModelSelectionMethod(enable_cuda=torch.cuda.is_available())
         time = method.fit(train.x, train.z, train.y, dev.x, dev.z, dev.y,
@@ -36,7 +37,6 @@ def run_experiment(scenario_name, repid, datasize):
         print("saving results...")
         file_name = "deepgmm_%d_%d.npz" %(rep,train.x.shape[0])
         save_path = os.path.join(folder, file_name)
-        os.makedirs(folder, exist_ok=True)
         np.savez(save_path, x=test.w, y=test.y, g_true=test.g,
                  g_hat=g_pred_test.detach())
 

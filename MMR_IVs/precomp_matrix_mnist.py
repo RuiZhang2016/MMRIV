@@ -6,13 +6,13 @@ from sklearn.decomposition import PCA
 def precomp(sname,i,seed=527):
     np.random.seed(seed)
     train, dev, test = load_data(ROOT_PATH+'/data/'+sname+'/main.npz',Torch=False)
-    
+    folder = ROOT_PATH+'/tmp/'
+    os.makedirs(folder, exist_ok=True)
     if sname in ['mnist_z','mnist_xz']:
         M = int(train.z.shape[0]/400)
         train_K0 = _sqdist(train.z[i*M:(i+1)*M],train.z)
         dev_K0 = _sqdist(dev.z[i*M:(i+1)*M],dev.z)
-    
-        np.savez(ROOT_PATH+'/tmp/{}_K_{}.npz'.format(sname,i),train_K0=train_K0, dev_K0 = dev_K0)
+        np.savez(folder+'{}_K_{}.npz'.format(sname,i),train_K0=train_K0, dev_K0 = dev_K0)
     
     if i < 8 and sname in ['mnist_x','mnist_xz']:
         pca = PCA(n_components=8)
@@ -24,12 +24,15 @@ def precomp(sname,i,seed=527):
         train_L0 = _sqdist(X[:,[i]],X[:,[i]])
         dev_L0 = _sqdist(dev_X[:,[i]],X[:,[i]])
         test_L0 = _sqdist(test_X[:,[i]],X[:,[i]])
-        np.savez(ROOT_PATH+'/tmp/{}_L_{}.npz'.format(sname,i),train_L0=train_L0, test_L0=test_L0, dev_L0 = dev_L0)
+        np.savez(folder+'{}_L_{}.npz'.format(sname,i),train_L0=train_L0, test_L0=test_L0, dev_L0 = dev_L0)
 
 if __name__ == '__main__':
     for ind in range(400):
         for sname in ['mnist_z','mnist_x','mnist_xz']:
             precomp(sname,ind)
+
+    folder = ROOT_PATH+'/mnist_precomp/'
+    os.makedirs(folder, exist_ok=True)
     for sname in ['mnist_z','mnist_x','mnist_xz']:
         if sname in ['mnist_z','mnist_xz']:
             train_K0 = []
@@ -41,11 +44,11 @@ if __name__ == '__main__':
                 dev_K0 += [res['dev_K0']]
             train_K0 = np.vstack(train_K0)
             dev_K0 = np.vstack(dev_K0)
-            np.save(ROOT_PATH+'/mnist_precomp/{}_train_K0.npy'.format(sname), train_K0)
-            np.save(ROOT_PATH+'/mnist_precomp/{}_dev_K0.npy'.format(sname), dev_K0)
+            np.save(folder+'{}_train_K0.npy'.format(sname), train_K0)
+            np.save(folder+'{}_dev_K0.npy'.format(sname), dev_K0)
             dist = np.sqrt(train_K0)
             a = np.median(dist.flatten())
-            np.save(ROOT_PATH+'/mnist_precomp/{}_ak.npy'.format(sname), a)
+            np.save(folder+'{}_ak.npy'.format(sname), a)
         
         if sname in ['mnist_x','mnist_xz']:
             train_L0 = []
@@ -55,6 +58,6 @@ if __name__ == '__main__':
                 os.remove(ROOT_PATH + '/tmp/{}_L_{}.npz'.format(sname,i))
                 train_L0 += [L0['train_L0']]
                 test_L0 += [L0['test_L0']]
-            np.savez(ROOT_PATH+'/mnist_precomp/{}_Ls.npz'.format(sname),train_L0=train_L0, test_L0=test_L0)
+            np.savez(folder+'{}_Ls.npz'.format(sname),train_L0=train_L0, test_L0=test_L0)
         
 

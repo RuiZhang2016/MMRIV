@@ -80,8 +80,8 @@ def experiment(sname, seed,nystr=False):
         print('params,test_err, norm: ',opt_params, opt_test_err, prev_norm, norm[0,0])
     
     folder = ROOT_PATH+"/MMR_IVs/results/mendelian/" + sname + "/"
-    train, dev, test = load_data(ROOT_PATH+"/data/mendelian/"+sname+'.npz',Torch=False)
     os.makedirs(folder, exist_ok=True)
+    train, dev, test = load_data(ROOT_PATH+"/data/mendelian/"+sname+'.npz',Torch=False)
 
     X = train.x
     Y = train.y
