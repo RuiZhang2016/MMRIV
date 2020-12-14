@@ -50,7 +50,7 @@ def experiment(sname, seed,datasize, nystr=False):
     def callback0(params, timer=None):
         global Nfeval, prev_norm, opt_params, opt_test_err
         if Nfeval % 1 == 0:
-            al,bl = params
+            al,bl = np.exp(params)
             L = bl*bl*np.exp(-L0/al/al/2) +1e-6*EYEN
             if nystr:
                 alpha = EYEN-eig_vec_K@np.linalg.inv(eig_vec_K.T@L@eig_vec_K/N2+np.diag(1/eig_val_K/N2))@eig_vec_K.T@L/N2
