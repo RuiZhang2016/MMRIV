@@ -22,6 +22,7 @@ def precomp(sname,seed=527):
     np.save(folder+'{}_dev_K.npy'.format(sname),dev_K)
 
 if __name__ == '__main__':
+    # file name: numofIV_c2_c1
     scenarios = ["mendelian_{}_{}_{}".format(s, i, j) for s in [8, 16, 32] for i, j in [[1, 1]]]
     scenarios += ["mendelian_{}_{}_{}".format(16, i, j) for i, j in [[1, 0.5], [1, 2]]]
     scenarios += ["mendelian_{}_{}_{}".format(16, i, j) for i, j in [[0.5, 1], [2, 1]]]
