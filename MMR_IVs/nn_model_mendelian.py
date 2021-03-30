@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import PolynomialFeatures
 import scipy
 from joblib import Parallel, delayed
-from util import get_median_inter_mnist, Kernel, load_data, ROOT_PATH,_sqdist
+from util import get_median_inter_mnist, Kernel, load_data, ROOT_PATH,_sqdist, FCNN
 
 
 def run_experiment_nn(sname,indices=[],seed=527,training=True):
@@ -53,7 +53,7 @@ def run_experiment_nn(sname,indices=[],seed=527,training=True):
         dev_K = torch.from_numpy(dev_K).float()
 
         n_data = x.shape[0]
-        net = Net(x.shape[1])
+        net = FCNN(x.shape[1])
         es = EarlyStopping(patience=5)
         optimizer = optim.Adam(list(net.parameters()), lr=lr, weight_decay=decay_weight)
 
